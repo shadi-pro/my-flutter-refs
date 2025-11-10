@@ -1,0 +1,48 @@
+/* Standards Media Query Scales  */
+
+/* A] Extra Small Screen [xs]  */
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Clearing the Max-height of the navbar collapse => to Clear the scrolling bar  */
+    .navbar-fixed-bottom .navbar-collapse,
+    .navbar-fixed-top .navbar-collapse {
+        max-height: none;
+    }    
+
+    .subscribe .form-control {
+       margin: 20px auto; 
+       width: 400px;
+    }
+
+}
+
+/* B] Small Screen [sm]  */
+@media (min-width: 768px) and (max-width: 991px) {
+    .navbar-inverse .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse {
+        max-height: 100px;
+    }    
+}
+
+/* C] Medium Screen [md]  */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse {
+        max-height: 100px;
+    }    
+}
+
+/* D] Large Screen [lg]  */
+@media (min-width: 1200px) {
+
+}
+/* ------------------------------------------------------------------------- */
+
+/* Customized Media Query Scales */
+

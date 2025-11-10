@@ -1,0 +1,620 @@
+
+/* Navbar section  */
+.navbar{min-height:30px;}
+
+.navbar-right {border:none; margin-bottom: 0px;}
+
+.navbar-nav > li > a  {font-size:15px; padding-top:25px; padding-bottom:25px;}
+
+.navbar-inverse .navbar-nav > li > a{
+    color : #BBB;        
+    padding-top: 25px;    
+    padding-bottom: 25px;    
+    font-size: 16px;
+}
+
+.navbar-inverse .navbar-header {font-size:30px; line-height:30px;}
+
+.navbar-inverse .navbar-header .navbar-brand {font-size: 20px; line-height: 40px;}
+
+.navbar-toggle  {margin-top: 17px;}
+
+/* DropDown Menu Seperator */
+.dropdown-menu .divider {background-color: #871818;}
+
+/* Dropdown Menu */
+.dropdown-menu  {min-width: 200px;}
+
+.dropdown-menu > li > a {font-size: 15px; color: #BBB; transition: padding .5s ease;}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {color:#fff; padding-left: 25px;}
+
+.dropdown-menu,
+.dropdown-menu li a {background-color: black; color: #9d9d9d;}
+
+.navbar-right .dropdown-menu {left:0px; right:auto;}
+
+.navbar-right {margin-right: 50px}
+/* -------------------------------------------------------------- */
+
+/* Carousel Slider section  */
+.carousel-caption {
+    bottom: 200px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: rgb(2, 3, 3, 0.3);
+}
+
+.carousel-indicators li {bottom: 0px;}
+
+.carousel-indicators li { width: 15px; height: 15px; bottom: 0px;}
+
+.carousel-indicators .active {width: 17px; height: 17px;}     
+
+/* [carousel sectoin] image (fixing zoomimg out problem) */
+.carousel-inner>.item>img {width: 100%;}
+
+/* --------------------------------------------------------------- */
+
+/* About Section */
+.about .lead {    
+    color: #888;
+    font-size: 25px;
+    margin-top: 15px;
+}
+/* ------------------------------------------------------------- */
+
+/* Features/Services Section  */
+.features {
+    background-color: #ccc;
+    padding-top: 50px;
+    padding-bottom: 50px;    
+}
+
+.features .feat {margin-bottom: 30px;}
+
+.features .feat p {
+   margin-bottom: 30px;    
+   line-height: 2em;
+   transition: all 0.5s ease;
+}
+
+.features .feat span.glyphicon {
+    font-size : 20px;
+    margin-bottom: 30px;    
+    color: #666;
+    transition: all 0.5s ease;
+}
+/* ------------------------------------------------------- */
+
+/* Testimonials Section  */
+
+.testimonials .h1 {font-size: 25px; font-weight: bold;}
+
+.testimonials .item {
+    background-color: #aaa;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+.testimonials .lead {color: #fff; line-height: 2em;}
+
+.testimonials .carousel-inner {margin-bottom: 30px; min-height: 160px;}
+
+.testimonials span {font-size: 25px; font-weight: bold;}
+
+.testimonials .carousel-indicators {
+    bottom: 0px;    
+    position: static;
+    margin-left: auto;
+    width: 100%;
+    padding-top: 10px;
+    
+}
+
+.testimonials .carousel-indicators li {
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    text-indent: 0px;
+    border: 3px solid #fff;
+    border-radius: 50%;    
+    background:none;    
+    overflow: hidden;     
+    transition: all .5s ease;    
+    opacity: 0.5;
+}
+
+.testimonials .carousel-indicators .active {
+    width: 80px;
+    height: 80px;
+    margin: 5px;   
+    text-indent: 0px;   
+    border-radius: 50%;   
+    background:none;   
+    overflow: hidden;            
+    transition: all .5s ease;    
+    opacity: 1;
+}
+
+.testimonials .carousel-indicators li img,
+.testimonials .carousel-indicators .active img  {min-width: 100%; }
+
+/* ------------------------------------------------- */
+
+/*  Table Price */
+.price-table {background: #EEE;}
+    
+.price-table .h1 {margin: 5px 0 15px;}
+
+.price-table .price_box {
+    border: 1px solid #DDD;
+    border-radius : 20px;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 15px;    
+}
+
+.price-table .price_box p {
+    font-size: 25px; 
+    font-weight: bold;     
+    background: #eee;
+    width: 100px;
+    height: 100px;    
+    line-height: 100px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    transition-duration: 0.7s;    
+}
+
+.price-table .price_box:hover p {
+    transform: scale(1.1, 1.1) rotate(360deg);
+    border: 2px solid #9d9d9d;
+}
+
+.price-table .price_box ul { line-height: 250%; font-size: 18px;}
+
+.price-table .price_box a {margin: 5px;}
+/* ------------------------------------------------------ */
+
+/* Our Team Section */
+.our-team {
+    background: url("../img/img3.jpg") no-repeat center center fixed;
+    width: 100%;
+    min-height: 600px;
+    overflow: hidden;
+    padding:0px;
+    margin:10px auto;
+    -moz-background-size: cover;      
+    -o-background-size: cover;      
+    -webkit-bsackground-size: cover;    
+    background-size: cover;      
+}
+
+.our-team .team {
+    background-color: rgba(2, 2, 2, 0.7 );
+    min-height:600px ;
+    padding-top : 40px;
+    padding-bottom : 40px;
+    color:#fff;
+}
+
+.our-team .person {margin-bottom: 40px;}
+
+.our-team img { width: 100px; height: 100px;}
+/* --------------------------------------- */
+/* Subscribe Sectoin  */
+.subscribe {
+    padding-top: 40px;
+    padding-bottom: 70px;
+    background-color: #eee;    
+}
+
+.subscribe .h1 {color:#888; letter-spacing: 2px; }
+
+.subscribe p {margin-bottom : 30px;}
+
+.subscribe .form-control {
+    border-radius: 0;    
+    margin-right: -5px;
+    width : 300px
+}
+
+.subscribe button {border-radius: 0; }
+
+/* --------------------------------------- */
+
+/* Statistics Section */
+.statistics {
+    min-height: 300px;
+    background:url('../img/img0.jpg') no-repeat center center fixed;
+    -moz-background-size: cover;      
+    -o-background-size: cover;      
+    -webkit-bsackground-size: cover;    
+    background-size: cover;      
+    padding:0px; 
+}
+
+.statistics .data {    
+    background-color: rgba(2, 2, 2, 0.7);          
+    min-height: 300px;
+    padding-top: 40px;
+    padding-bottom : 70px;
+    color:#b6b6b5;
+}
+
+.statistics .stats {margin-bottom: 30px; }    
+
+.statistics p {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 0px;        
+}
+
+.statistics span {font-size: 20px;}
+
+.statistics .stats div {
+    margin-bottom: 50px;        
+    transition: all .7s ease-in-out;
+}
+
+.statistics .stats div:hover {color: #fff; }    
+
+/* ------------------------------------------ */
+
+/* Skills Section */
+.our-skills {    
+    background-color: #777;
+}
+
+.our-skills .h1 { font-weight: bold; }
+
+.our-skills h3 {margin-top: 0px; font-weight: bold; }
+
+.our-skills .progress {height: 30px;}
+
+.our-skills .progress-bar {
+    line-height:30px;
+    text-align: left;
+    text-indent: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
+/* -------------------------------------- */
+
+.contact-us {        
+    background: url('../img/img5.jpg') center center fixed;
+    background-size: cover;
+    min-height: 300px;
+    padding:0px;
+}
+
+.contact-us .fields {
+    background-color: rgba(87,78,78,.7);
+    min-height: 300px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+}
+    
+.contact-us textarea {height: 118px;}
+    
+.contact-us i {color: #fff; }    
+
+.contact-us .h1 {color:#fff;}
+
+.contact-us p {margin-bottom: 30px; color: #fff;}
+
+/* Dark mode [contact us] */
+.contact-us textarea {
+    color : #fff;
+    background : rgba(87,78,78,.7);
+}
+
+.contact-us input[type="text"] {
+    color : #fff;
+    background : rgba(87,78,78,.7);
+}
+/* -------------------------------------- */
+
+/* Our Clients */
+.our-clients {background: #EEE; }
+
+.our-clients ul {border: none }
+
+.our-clients img {
+    opacity :  .4;
+    filter:alpha(opacity=40);
+    margin-bottom: 20px;
+    margin-top: 20px;
+    transition:all .5s ease-in-out; 
+}
+
+.our-clients img:hover {opacity: 1; }
+/* ------------------------------------------- */
+
+/* Footer Section */
+.footer {background: #111; color:#AAA; }
+
+.footer a {color:#AAA; }
+
+.footer a:hover { color:#fff; }
+
+.footer h3 {    
+    color:#0895d1;    
+    margin: 30px 0 20px;
+    letter-spacing: 1px;
+}
+
+
+.footer .three-columns { overflow: hidden;}
+
+.footer .three-columns li {    
+    float: left;
+    width: 33.333%;
+    font-size:15px;
+    padding: 5px 0;
+}
+
+
+.footer .social-list {    
+    overflow: hidden;
+    margin: 30px 0 5px 0px;
+}
+
+.footer .social-list li {    
+    float: left ;
+    margin-right: 5px;
+    opacity: .7;
+    filter: alpha(opacity=70%);
+    transition: all .35s ease-in-out;
+}
+
+.footer .social-list li:hover {opacity : 1}
+
+.footer .img-thumbnail {
+    background-color: rgba(0,0,0,0.2) ;
+    border: 1px soid #444;
+    margin-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.copyright1 {
+    background-color: #333;
+    color: #AAA;
+    padding: 15px 0px;
+    margin: 30px -10px 0px;
+    font-size: 18px;
+}
+/* ---------------------------- */
+
+/* Google Fonts */
+.Main {
+    font-family:'Tangerine';
+    font-weight: bold;
+    font-size:60px; 
+}
+
+.Welcome { font-family:'Dorid Sans'; font-size: 20px}
+
+.Welcome span {font-size:15px;}
+/* -------------------------------------- */
+
+/* Option Box, Hover Gallery, Wow Animation Library  */
+.option-box  {
+  position:fixed;  
+  top: 100px;
+  left: -20px;
+  z-index : 9999;
+  border: none;
+  padding: 10px;
+  height : fit-content;
+}
+
+.hover-box, .animation-box  {
+  /* position:fixed;   */
+  /* top: 380px;
+  left: 0px; */
+  z-index : 9999;
+  border: none;
+  padding: 20px;
+  margin: 10px auto;
+  width: auto;
+}
+
+.option-box .color-option {    
+    float : left;
+    padding: 10px;
+    color: #fff;
+    background: #333;
+    width : fit-content;
+    height : fit-content;
+    display: none;
+}
+
+
+/* .hover-box, .hover-option { */
+.hover-box , .animation-box {
+    /* float : left; */
+    padding: 10px;
+    color: #fff;
+    background: #333;
+    width : 100%;
+    display: none;
+}
+
+.option-box .color-option ul li  {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+    margin-right: 3px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* Changing color gaerbox icon */
+.option-box .gear-option {
+    color:#fff;
+    cursor: pointer;
+    padding: 5px;
+    animation: rotate 3s infinite linear;     
+    border:none;
+    border-radius: 50%;
+}
+
+/* Hover.css gearbox icon */
+.gear-option0 {
+    color:#fff;
+    background-color: #0895d1;
+    cursor: pointer;
+    padding: 5px;
+    animation: growShine 3s infinite linear;     
+    border:none;
+    border-radius: 10%;    
+    left:0;
+    top: 380px;
+    position: fixed;
+    /* left:10px ;  
+    /* top:380px; */
+}
+
+/* Hover.css library  */
+.hover-effects .container hr {
+    border: 5px solid silver;
+    width: 400px;
+    margin: 50px auto;
+}
+
+/* Wow Animation Library  */
+.gear-option1 {
+    color:#fff;
+    background-color: red;
+    cursor: pointer;
+    padding: 5px;
+    animation: growShine 3s infinite linear;     
+    border:none;
+    border-radius: 10%;    
+    left:0;
+    top: 450px;
+    position: fixed;
+    /* left:10px ;  
+    /* top:380px; */
+}
+
+
+@keyframes rotate {
+    0% {transform: rotate(0deg)
+                   scale(1);}    
+    50% { transform: rotate(180deg)
+                   scale(1.3);}    
+    100% { transform: rotate(360deg)
+                   scale(1);}
+}
+
+@keyframes growShine {
+    0% {
+        transform: translateX(0px)
+                   scale(1);
+        box-shadow: 1px 1px 1px 1px gold;
+    }    
+
+    50% { 
+        transform: translateX(10px) 
+                     scale(1.3);
+        box-shadow: 2px 2px 2px 2px gold;
+    }    
+
+    75% {
+        transform: translateX(10px)
+                     scale(1.3);
+        box-shadow: 3px 3px 3px 3px goldenrod;
+    }
+    
+    100% { transform: translateX(0px)
+                   scale(1);
+    }
+}
+
+/* -------------------*/
+
+/* Preloader section */
+.loading-overlay {
+    background-color: #222 ;
+    color: #fff;
+    position: fixed;
+    left: -10px;
+    top: -20px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+
+/* spinnner script loaded from internet */
+.spinner {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    margin: 200px auto;        
+}
+
+.double-bounce1, .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: .6;
+    position: absolute ;
+    top: 0;
+    left: 0;
+    animation: bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {animation-delay: -1s;}
+
+@keyframes bounce {
+    0%, 100% {transform: scale(0.0);}    
+    50% {transform: scale(1.0);}    
+}
+/* -------------------------------- */
+
+/* Scrolling to top button */
+#scroll-top {
+    right: 15px;
+    bottom: 10px;
+    background-color: #777;
+    color: #ddd;
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    text-align:center;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
+    z-index: 9998;    
+    padding: 5px;     
+    border-radius:50%;
+    display: none;
+}
+
+#scroll-top:hover {background : #111;}
+/* --------------------------------- */
+
+/* Grouping/Cleaning/Validating CSS Properties*/
+.features .h1,
+.testimonials .h1,
+.our-team .h1,
+.subscribe .h1,
+.statistics .h1, 
+.our-skills .h1 {margin-bottom: 50px;}
+ 
+.about,
+.testimonials, 
+.price-table, 
+.subscribe, 
+.our-skills, 
+.our-clients {padding-bottom: 40px; padding-top: 40px}
+/* --------------------------------------- */
+
+

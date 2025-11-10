@@ -1,0 +1,49 @@
+/* Default theme file css [Grouping properties] */
+
+/* Background color Group */
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:focus,
+.navbar-inverse .navbar-nav>.active>a:hover,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.carousel-indicators .active,
+.option-box .color-option ul li,
+.option-box .gear-option
+{
+    background-color: #E41B17;    
+}
+
+/* Font color Group */
+.navbar-inverse .navbar-brand span, 
+.about h1 span , .about h3 span , .about p span, 
+.features .feat span.glyphicon:hover,
+.testimonials span, 
+.footer h3,
+.footer .copyright1 span
+ {
+    color: #E41B17;
+}
+
+/* Border color Group */
+.carousel-indicators li
+{     
+    border: 1px solid #E41B17
+}
+
+.testimonials .carousel-indicators .active,
+.option-box .color-option
+ {    
+    border: 3px solid #E41B17
+}
+
+.dropdown-menu  {
+    border-top: 3px solid #E41B17;
+}
+/* ------------------------------------------------------------------ */
+
+/* DropDown Menu Seperator [Will not be changed in the Color files {it has a unique color}] */
+.dropdown-menu .divider {
+  background-color: #871818;
+}
+
+/* ---------------------------------------- *
