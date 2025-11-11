@@ -1,5 +1,5 @@
 /*
-    [A]  part 2 [E-commerce]
+    [A]  part 3 [E-commerce]
     [] [Commerce App ] project structure  [course app ] :
 
     lib/
@@ -24,8 +24,10 @@
           └── img3.jpg
   // ----------------------------------------------
 
-  B]  
-
+  B]  {home_page.dart} :
+    - the main   E-commerce home page that include hte following   :
+      1- Categories section  
+      2- Items section  
 
  
 

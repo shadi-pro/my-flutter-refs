@@ -40,6 +40,12 @@ class _HomepageState extends State<Homepage> {
       'subtitle': 'product 2 description',
       "price": "200\$",
     },
+    {
+      "image": "assets/images/img3.jpg",
+      "title": "product 3",
+      'subtitle': 'product 3 description',
+      "price": "400\$",
+    },
   ];
 
   @override
@@ -119,7 +125,7 @@ class _HomepageState extends State<Homepage> {
 
             // Products items  title:
             Container(
-              height: 10,
+              height: 50,
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Text(
                 "Best selling",
@@ -176,7 +182,11 @@ class _HomepageState extends State<Homepage> {
                         ),
                         child: Text(
                           items[i]['price'],
-                          style: TextStyle(fontSize: 14, color: Colors.orange),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
