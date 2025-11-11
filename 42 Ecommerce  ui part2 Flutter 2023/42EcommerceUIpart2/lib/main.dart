@@ -1,23 +1,27 @@
 /*
+    [A]  part 2 [E-commerce]
+    [] [Commerce App ] project structure  [course app ] :
 
-  A]  [Commerce App ] project structure  [course app ] :
-
-      lib/
+    lib/
     ├── main.dart
+    ├── home_page.dart
     ├── screens/
-    │    ├── home_page.dart
-    │    ├── cart_page.dart
-    │    ├── about_page.dart
-    │    ├── contact_page.dart
+    │    ├──  .dart
+    │    ├──  .dart
+    │    ├──  .dart
+    │    ├──  .dart
     ├── widgets/
-    │    ├── custom_drawer.dart
-    │    ├── product_card.dart
-    │    ├── category_item.dart
+    │    ├── .dart
+    │    ├── .dart
+    │    ├── .dart
     └── models/
           └── product_model.dart
     assets/
     └── images/
           └── shadi.jpg
+          └── img1.jpg
+          └── img2.jpg
+          └── img3.jpg
   // ----------------------------------------------
 
   B]  
