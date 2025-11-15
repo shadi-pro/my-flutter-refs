@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   final List<Product> cartItems;
+  final Function(Product) onRemoveFromCart;
 
-  const CartPage({super.key, required this.cartItems});
+  const CartPage({
+    super.key,
+    required this.cartItems,
+    required this.onRemoveFromCart,
+  });
 
-  @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  final Map<Product, int> _quantities = {};
-
-  @override
-  void initState() {
-    super.initState();
-    for (var product in widget.cartItems) {
-      _quantities[product] = (_quantities[product] ?? 0) + 1;
+  // 👇 Always derive quantities directly from cartItems
+  Map<Product, int> get quantities {
+    final map = <Product, int>{};
+    for (var product in cartItems) {
+      map[product] = (map[product] ?? 0) + 1;
     }
+    return map;
   }
 
   double get totalPrice {
     double total = 0;
-    for (var entry in _quantities.entries) {
+    for (var entry in quantities.entries) {
       final product = entry.key;
       final qty = entry.value;
       final priceValue =
@@ -38,16 +37,16 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Your Cart")),
-      body: _quantities.isEmpty
+      body: quantities.isEmpty
           ? const Center(child: Text("Your cart is empty"))
           : Column(
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: _quantities.length,
+                    itemCount: quantities.length,
                     itemBuilder: (context, index) {
-                      final product = _quantities.keys.elementAt(index);
-                      final qty = _quantities[product] ?? 1;
+                      final product = quantities.keys.elementAt(index);
+                      final qty = quantities[product] ?? 1;
 
                       return Card(
                         margin: const EdgeInsets.all(8),
@@ -55,31 +54,21 @@ class _CartPageState extends State<CartPage> {
                           leading: Image.asset(product.image, width: 50),
                           title: Text(product.title),
                           subtitle: Text("${product.price} • Qty: $qty"),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.remove),
-                                onPressed: () {
-                                  setState(() {
-                                    if (qty > 1) {
-                                      _quantities[product] = qty - 1;
-                                    } else {
-                                      _quantities.remove(product);
-                                    }
-                                  });
-                                },
-                              ),
-                              Text("$qty"),
-                              IconButton(
-                                icon: const Icon(Icons.add),
-                                onPressed: () {
-                                  setState(() {
-                                    _quantities[product] = qty + 1;
-                                  });
-                                },
-                              ),
-                            ],
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.remove_circle,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              onRemoveFromCart(
+                                product,
+                              ); // 👈 directly updates Homepage
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("${product.title} removed"),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );
@@ -88,41 +77,22 @@ class _CartPageState extends State<CartPage> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Total:",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "\$${totalPrice.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange,
-                            ),
-                          ),
-                        ],
+                      const Text(
+                        "Total:",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(height: 12),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Checkout not implemented yet"),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.payment),
-                        label: const Text("Proceed to Checkout"),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
+                      Text(
+                        "\$${totalPrice.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
                         ),
                       ),
                     ],

@@ -5,19 +5,11 @@ import '../pages/product_details.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback onAddToCart;
-  final VoidCallback onRemoveFromCart;
-  final VoidCallback onToggleFavorite;
-  final bool isFavorite;
-  final bool isInCart;
 
   const ProductCard({
     super.key,
     required this.product,
     required this.onAddToCart,
-    required this.onRemoveFromCart,
-    required this.onToggleFavorite,
-    required this.isFavorite,
-    required this.isInCart,
   });
 
   @override
@@ -32,7 +24,7 @@ class ProductCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (_) => ProductDetailsPage(
                 product: product,
-                onAddToCart: onAddToCart,
+                onAddToCart: onAddToCart, // 👈 use callback
               ),
             ),
           );
@@ -54,35 +46,28 @@ class ProductCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 product.price,
-                style: const TextStyle(color: Colors.orange, fontSize: 14),
+                style: const TextStyle(
+                  color: Colors.orange,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? Colors.red : Colors.grey,
-                  ),
-                  onPressed: onToggleFavorite,
-                ),
-                TextButton.icon(
-                  onPressed: isInCart ? onRemoveFromCart : onAddToCart,
-                  icon: Icon(
-                    isInCart
-                        ? Icons.remove_shopping_cart
-                        : Icons.add_shopping_cart,
-                  ),
-                  label: Text(isInCart ? "Remove" : "Add"),
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: onAddToCart,
+                icon: const Icon(Icons.add_shopping_cart),
+                label: const Text("Add"),
+              ),
             ),
           ],
         ),
