@@ -18,27 +18,26 @@ class ProductCard extends StatelessWidget {
       elevation: 2,
       margin: const EdgeInsets.all(8),
       child: InkWell(
-        // 👇 Whole card is clickable
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ProductDetailsPage(product: product),
+              builder: (_) => ProductDetailsPage(
+                product: product,
+                onAddToCart: onAddToCart, // 👈 use callback
+              ),
             ),
           );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image takes flexible space
             Expanded(
               child: SizedBox(
                 width: double.infinity,
                 child: Image.asset(product.image, fit: BoxFit.cover),
               ),
             ),
-
-            // Title
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -51,8 +50,6 @@ class ProductCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-
-            // Price
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -64,8 +61,6 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Add to Cart button
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(

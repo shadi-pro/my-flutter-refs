@@ -3,57 +3,67 @@ import '../models/product.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
+  final VoidCallback onAddToCart;
 
-  const ProductDetailsPage({super.key, required this.product});
+  const ProductDetailsPage({
+    super.key,
+    required this.product,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(product.title)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 220,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Image.asset(
+              product.image,
+              fit: BoxFit.cover,
               width: double.infinity,
-              child: Image.asset(product.image, fit: BoxFit.cover),
             ),
-            const SizedBox(height: 20),
-            Text(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
               product.title,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
-            Text(
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
               product.subtitle,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 16),
-            Text(
-              product.price,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.orange,
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
             ),
-            const Spacer(),
-            ElevatedButton.icon(
+            child: Text(
+              product.price,
+              style: const TextStyle(fontSize: 18, color: Colors.orange),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton.icon(
               onPressed: () {
+                onAddToCart(); // 👈 adds to cart
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(const SnackBar(content: Text("Added to cart!")));
+                ).showSnackBar(const SnackBar(content: Text("Added to cart")));
               },
-              icon: const Icon(Icons.shopping_cart),
+              icon: const Icon(Icons.add_shopping_cart),
               label: const Text("Add to Cart"),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

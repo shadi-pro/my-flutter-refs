@@ -14,7 +14,6 @@ class EcommerceApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ecommerce Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      // 👇 Home points to your Homepage widget
       home: const Homepage(),
     );
   }
