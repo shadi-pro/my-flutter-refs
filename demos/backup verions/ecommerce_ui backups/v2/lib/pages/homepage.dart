@@ -1,30 +1,3 @@
-/*   
-
-  a- main features :
-   1- navigation button to  in-delaited [product_details] page => wihtin each product  main card 
- 
-   2- navigattion button to  [wishlist] page => 
-      - by each product card 
-       
-   3- navigattion button to  [Cartlist] page =>  
-      - by appbar icon 
-      - wihtin each product card 
-      - wihtin bottom navigation bar button icon   
-
-   
-   4-  
-  -------------------------------------
-
-  b-  : 
-
-
-
-
-
-
- */
-// ============================
-
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
@@ -100,7 +73,7 @@ class _HomepageState extends State<Homepage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Shadi Ecommerce Demo"),
+        title: const Text("Ecommerce Demo"),
         actions: [
           Stack(
             children: [
