@@ -3,12 +3,14 @@ class Product {
   final String title;
   final String subtitle;
   final String price;
+  final String category;
 
   Product({
     required this.image,
     required this.title,
     required this.subtitle,
     required this.price,
+    required this.category,
   });
 
   @override
@@ -19,9 +21,14 @@ class Product {
           image == other.image &&
           title == other.title &&
           subtitle == other.subtitle &&
-          price == other.price;
+          price == other.price &&
+          category == other.category; // ✅ fixed
 
   @override
   int get hashCode =>
-      image.hashCode ^ title.hashCode ^ subtitle.hashCode ^ price.hashCode;
+      image.hashCode ^
+      title.hashCode ^
+      subtitle.hashCode ^
+      price.hashCode ^
+      category.hashCode; // ✅ include category
 }

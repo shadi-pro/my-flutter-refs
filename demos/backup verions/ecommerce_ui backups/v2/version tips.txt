@@ -1,14 +1,41 @@
 v2 :
-	a- main pages :
-	  1- main {main.dart} => displaying {homepage} page contents 
-	  2- homepage {pages/homepage.dart}  =>  with serveral inner navigation to [in-detailed page + cart page +  wishlist page ]  
-	  3- cartpage {pages/cart_page.dart}  =>  simple default products  display
-	  4- indetailed page  {pages/product_details.dart} => displaying each product properties    
-	  5- products data {data/products}   =>  simulation data of  all products  
+a- main pages 
+	1- main {main.dart} => displaying {homepage} page contents 
+	2- homepage {pages/homepage.dart}  =>  with serveral inner navigation to [in-detailed page + cart page +  wishlist page ]  
+	3- cartpage {pages/cart_page.dart}  =>  simple default products  display
+  	4- indetailed page  {pages/product_details.dart} => displaying each product properties    
+	5- products data {data/products}   =>  simulation data of  all products  
 			
-	 b- main features:
-	    1- app bar  -> default title         
-	    2- bottom navigation bar -> [ 2 navigation  buttons (cartpage) +  (homepage )  + (wishlist)  ]  
-	    3- (2+) products items witin the main grid view container  
-            4- cartlist page with default display of (2+) available  products 
-            5- wishlist page with default display of (2+) available  products 
+ b- main features:
+	1- app bar  -> default title         
+	2- bottom navigation bar -> [ 2 navigation  buttons (cartpage) +  (homepage )  + (wishlist)  ]  
+	3- (2+) products items witin the main grid view container  
+        4- cartlist page with default display of (2+) available  products 
+         5- wishlist page with default display of (2+) available  products 
+
+c- project structure :
+assets/
+  images/
+    laptop.jpg
+    smartphone.jpg
+    watch.jpg
+    bag.jpg
+    tshirt.jpg
+    shoes.jpg
+lib/
+  main.dart
+  models/
+    product.dart
+  data/
+    products.dart
+  pages/
+    homepage.dart
+    cart_page.dart
+    product_details.dart
+    wishlist_page.dart
+  widgets/
+    product_card.dart
+    category_item.dart
+  utils/
+    app_colors.dart
+    app_styles.dart

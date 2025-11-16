@@ -3,8 +3,13 @@ import '../models/product.dart';
 
 class WishlistPage extends StatelessWidget {
   final List<Product> wishlistItems;
+  final Function(Product) onRemoveFromWishlist;
 
-  const WishlistPage({super.key, required this.wishlistItems});
+  const WishlistPage({
+    super.key,
+    required this.wishlistItems,
+    required this.onRemoveFromWishlist,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +27,19 @@ class WishlistPage extends StatelessWidget {
                     leading: Image.asset(product.image, width: 50),
                     title: Text(product.title),
                     subtitle: Text(product.price),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        onRemoveFromWishlist(product);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "${product.title} removed from wishlist",
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 );
               },

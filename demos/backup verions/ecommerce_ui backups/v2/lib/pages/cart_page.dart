@@ -3,15 +3,19 @@ import '../models/product.dart';
 
 class CartPage extends StatelessWidget {
   final List<Product> cartItems;
+  final Function(Product) onAddToCart;
   final Function(Product) onRemoveFromCart;
+  final Function(Product) onDeleteFromCart;
 
   const CartPage({
     super.key,
     required this.cartItems,
+    required this.onAddToCart,
     required this.onRemoveFromCart,
+    required this.onDeleteFromCart,
   });
 
-  // 👇 Always derive quantities directly from cartItems
+  // 👇 Derive quantities directly from cartItems
   Map<Product, int> get quantities {
     final map = <Product, int>{};
     for (var product in cartItems) {
@@ -53,22 +57,40 @@ class CartPage extends StatelessWidget {
                         child: ListTile(
                           leading: Image.asset(product.image, width: 50),
                           title: Text(product.title),
-                          subtitle: Text("${product.price} • Qty: $qty"),
-                          trailing: IconButton(
-                            icon: const Icon(
-                              Icons.remove_circle,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              onRemoveFromCart(
-                                product,
-                              ); // 👈 directly updates Homepage
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("${product.title} removed"),
+                          subtitle: Text("${product.price}"),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () {
+                                  if (qty > 1) {
+                                    onRemoveFromCart(product);
+                                  }
+                                },
+                              ),
+                              Text("$qty"),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  onAddToCart(product);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
                                 ),
-                              );
-                            },
+                                onPressed: () {
+                                  onDeleteFromCart(product);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("${product.title} removed"),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       );

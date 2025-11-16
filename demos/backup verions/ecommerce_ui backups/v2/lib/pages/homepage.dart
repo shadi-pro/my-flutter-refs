@@ -1,3 +1,29 @@
+/*   
+
+  a- main features :
+   1- navigation button to  in-delaited [product_details] page => wihtin each product  main card 
+ 
+   2- navigattion button to  [wishlist] page => 
+      - by each product card 
+       
+   3- navigattion button to  [Cartlist] page =>  
+      - by appbar icon 
+      - wihtin each product card 
+      - wihtin bottom navigation bar button icon   
+
+   
+   4-  
+  -------------------------------------
+
+  b-  : 
+
+
+
+
+
+
+ */
+// ============================
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
@@ -26,6 +52,12 @@ class _HomepageState extends State<Homepage> {
   void removeFromCart(Product product) {
     setState(() {
       cartItems.remove(product);
+    });
+  }
+
+  void deleteFromCart(Product product) {
+    setState(() {
+      cartItems.removeWhere((item) => item == product);
     });
   }
 
@@ -66,14 +98,16 @@ class _HomepageState extends State<Homepage> {
       ),
       CartPage(
         cartItems: cartItems,
+        onAddToCart: (product) => addToCart(product),
         onRemoveFromCart: (product) => removeFromCart(product),
+        onDeleteFromCart: (product) => deleteFromCart(product),
       ),
       WishlistPage(wishlistItems: wishlistItems),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Ecommerce Demo"),
+        title: const Text("Shadi Ecommerce Demo"),
         actions: [
           Stack(
             children: [
