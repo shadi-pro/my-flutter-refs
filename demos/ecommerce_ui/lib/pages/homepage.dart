@@ -240,9 +240,9 @@ class _HomepageState extends State<Homepage> {
           children: [
             UserAccountsDrawerHeader(
               accountName: const Text("Shadi User"),
-              accountEmail: const Text("user@example.com"),
+              accountEmail: const Text("shadisayed.68911@gmail.com"),
               currentAccountPicture: const CircleAvatar(
-                backgroundImage: AssetImage("assets/images/user.jpg"),
+                backgroundImage: AssetImage("assets/images/shadi.jpg"),
               ),
               decoration: BoxDecoration(color: scheme.primary),
             ),
