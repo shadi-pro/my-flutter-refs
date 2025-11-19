@@ -24,14 +24,40 @@ class Homepage extends StatelessWidget {
 
       body: ListView(
         children: [
+          Container(
+            alignment: Alignment.center,
+            child: Text(
+              textAlign: TextAlign.center,
+              "This lesson is about the both of initState and dipose function in navigation as practical exmaple \n The main concept of {initState()} and {dipose()} methods as following :   ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+          ),
+
+          SizedBox(height: 50),
+
+          Container(
+            // decoration: border: Border(20),
+            child: Text(
+              textAlign: TextAlign.center,
+              "{initState()} : void method to be executed before the load is being loaded \n  {dispose()} : void method to be executed after the load is being loaded  ",
+              style: TextStyle(),
+            ),
+          ),
+
           MaterialButton(
             onPressed: () => Navigator.of(context).pushNamed('contact'),
-            child: Text("Go to Contact page "),
+            child: Text(
+              "Go to Contact page",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
 
           MaterialButton(
             onPressed: () => Navigator.of(context).pushNamed('listgenerate'),
-            child: Text("Go to Lesson page [Initial State and Dispose]"),
+            child: Text(
+              "Go to Lesson page [Initial State and Dispose]",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
