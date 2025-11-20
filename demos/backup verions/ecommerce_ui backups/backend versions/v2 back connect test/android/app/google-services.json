@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1039386150858",
+    "project_id": "shadi-ecommerce",
+    "storage_bucket": "shadi-ecommerce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039386150858:android:26eef02567a8b259daf133",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFEK4vAQNbcQ_Vnmvy-2ajOiBoNgeNAWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
