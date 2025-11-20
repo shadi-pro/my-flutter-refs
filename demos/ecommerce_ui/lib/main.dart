@@ -128,6 +128,7 @@ import 'package:firebase_core/firebase_core.dart'; // NEW: Firebase core import
 import 'firebase_options.dart'; // NEW: Generated options file
 import 'pages/homepage.dart';
 import 'utils/app_colors.dart';
+import 'pages/test_firestore.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // NEW: ensures async setup works
@@ -176,7 +177,8 @@ class _MyAppState extends State<MyApp> {
                 onBackground: AppColors.textLight,
               ),
       ),
-      home: Homepage(onToggleTheme: toggleTheme, isDarkMode: isDarkMode),
+      // home: Homepage(onToggleTheme: toggleTheme, isDarkMode: isDarkMode),
+      home: const TestFirestorePage(),
     );
   }
 }
