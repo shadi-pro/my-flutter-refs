@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart'; // ✅ added for date formatting
 
 class OrdersPage extends StatelessWidget {
   const OrdersPage({super.key});
@@ -49,6 +50,14 @@ class OrdersPage extends StatelessWidget {
               final status = order["status"] ?? "pending";
               final items = order["items"] as List<dynamic>? ?? [];
 
+              // ✅ Format timestamp using intl
+              String formattedDate = "";
+              if (order["timestamp"] != null) {
+                final ts = order["timestamp"] as Timestamp;
+                formattedDate =
+                    DateFormat('dd MMM yyyy, HH:mm').format(ts.toDate());
+              }
+
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ExpansionTile(
@@ -58,7 +67,7 @@ class OrdersPage extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    "Items: $itemCount • Total: \$${totalPrice.toStringAsFixed(2)}",
+                    "Items: $itemCount • Total: \$${totalPrice.toStringAsFixed(2)} • $formattedDate",
                   ),
                   trailing: Chip(
                     label: Text(status),
