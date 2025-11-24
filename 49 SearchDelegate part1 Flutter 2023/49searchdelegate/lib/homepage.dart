@@ -1,10 +1,7 @@
-// [homepage] =>
-//  a  Home page  inlcuding several buttons to be used in routing to inner pages of app
-// provided with 2 buttons of navigator to:
-//  0- [ {homepage.dart} ] =>  (using the {.pushReplacement} type)]
-//  1- [ {initstatedispose.dart} ] =>  (using the {.pushReplacement} type)]
-//  2- [ {contact.dart} ] =>  (using the {.pushReplacement} type)]
-
+/* [homepage] =>
+   - a  Home page  including  usiage of the mehtod of search deleagate  inside the  [AppBar]
+    
+*/
 import 'package:flutter/material.dart';
 // import 'package:first_app/customcard.dart';
 
@@ -21,44 +18,18 @@ class Homepage extends StatelessWidget {
         backgroundColor: Colors.grey[200],
         elevation: 0.0,
 
+        //  thi will inlude  seadch delegate inside [icon button] :
         actions: [
-          PopupMenuButton(
-            // icon property [type + color]  :
-            icon: Icon(Icons.menu, color: Colors.black),
-
-            // icon size  :
-            iconSize: 30,
-
-            // [this [method property will be executed by selecting an item from list , and will returin the programing value of the selected item ]
-            // [this method property  can be used in advanced functions according to the selected item ]
-            onSelected: (val) {
-              print('the ${val} is selected ');
+          // activate the searching delegate by press this button :
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                // the delegate property will class the defined class
+                delegate: CustomSearch(),
+              );
             },
-
-            // this method property will be executed by once the selelct menu is being opened ]
-            onOpened: () => print("the select menu is opened!"),
-
-            // this method property will be executed by once the selelct menu is being canceled]
-            onCanceled: () => print("the select menu is Canceled!"),
-
-            // [the itembuilder is returning list of items] :
-            itemBuilder: (context) => [
-              // [  each  is  including 2 mainly required prameters main {child : the label value} and {value : the programing value }  ]
-              PopupMenuItem(
-                child: Text('one'),
-                value: 'valOne',
-                onTap: () {
-                  print('First item is selected ');
-                },
-              ),
-              PopupMenuItem(
-                child: Text('two'),
-                value: 'valTwo',
-                onTap: () {
-                  print('Second is selected ');
-                },
-              ),
-            ],
           ),
         ],
       ),
@@ -69,20 +40,29 @@ class Homepage extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               textAlign: TextAlign.center,
-              "This lesson is about the both of initState and dipose function in navigation as practical exmaple \n The main concept of {initState()} and {dipose()} methods as following :   ",
+              "This lesson is group of tools [ functions +  variables ] in flutter to execute a proffient customized searching , usually related to buttons widgets ",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
 
           SizedBox(height: 50),
 
-          MaterialButton(
-            onPressed: () => Navigator.of(context).pushNamed('popupmenubutton'),
+          Container(
+            alignment: Alignment.center,
             child: Text(
-              "Go to Lesson page of [Popup Menu button ]",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              "This lesson is  being applied in this  lesson",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             ),
           ),
+
+          // MaterialButton(
+          //   onPressed: () => Navigator.of(context).pushNamed('popupmenubutton'),
+          //   child: Text(
+          //     "Go to Lesson page of [Popup Menu button ]",
+          //     style: TextStyle(fontWeight: FontWeight.bold),
+          //   ),
+          // ),
 
           // MaterialButton(
           //   onPressed: () => Navigator.of(context).pushNamed('listgenerate'),
@@ -94,5 +74,50 @@ class Homepage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+// ---------------------------------------------
+
+// building a seperate class for search delegate :
+class CustomSearch extends SearchDelegate {
+  // first button [prefix] inside the sreaching bar => will be customized as [Clearing] function :
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    // return list of actions functions      :
+    return [
+      IconButton(
+        onPressed: () {
+          query =
+              ''; // [a built-in serching delegate contorling] -> by click this button => search delegate bar value will be set by empty value [querry]
+        },
+        icon: Icon(Icons.close),
+      ),
+    ];
+  }
+
+  //  End button [suffix]  inside the searcing bar => => will be customized as [Close] function :
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(
+          context,
+          null,
+        ); // [ built-in   methiod of closing searching dalegate ]
+      },
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  // display the searching  grid  result    :
+  @override
+  Widget buildResults(BuildContext context) {
+    return Text('Seraching result');
+  }
+
+  //Return context value    :
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Text('Context');
   }
 }

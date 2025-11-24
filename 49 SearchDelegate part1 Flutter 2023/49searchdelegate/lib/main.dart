@@ -1,37 +1,33 @@
 /*
-    [A]  47 [ initState and Dispose  ] :
-      - with application some applications :
-        1- generating data from list of defined list 
-        2- generating list of numbers of generator method's index
-        3- generating list of birth dates by usign both of generator method's index + years values
- 
+    [A]  48 [ Search Delegate  part 1 ] :
+      -  applied in [Homepage]  isnside the Appbar
 
-    lib/
-    ├── main.dart
-    ├── homepage.dart
-    ├── listgenerate.dart
-    ├── contact.dart
-     
-    assets/
-    └── images/
-          └── shadi.jpg
-          └── img1.jpg
-          └── img2.jpg
-          └── img3.jpg
+
+
+    [B]  project structure : 
+      lib/
+      ├── main.dart
+      ├── homepage.dart
+      ├── listgenerate.dart
+      ├── contact.dart
+      
+      assets/
+      └── images/
+            └── shadi.jpg
+            └── img1.jpg
+            └── img2.jpg
+            └── img3.jpg
   // ----------------------------------------------
 
-  B]  {homepage.dart} :    [ abandened in this lesson]
-    - the main E-commerce home page that include hte following   :
-      1- Categories section  
-      2- Items section  
-      3- Product dynamic navigation
-      
+  B]  {homepage.dart} : 
+    - inlcuee the lessson new widget   
+
+
   // ------------------------------------------------
 
-  C]  {popupmenubutton.dart} :
-    - navigated throg a route button inside  [homepage.dart]  , including the following :
-      1- 
-
+  C]  {.dart} :
+    -  
+       
        
 */
 
@@ -59,10 +55,10 @@ class _MyAppState extends State<MyApp> {
       home: Homepage(),
 
       // assign all Routes  isnide  application   :
-      routes: {
-        "homepage": (context) => Homepage(),
-        "popupmenubutton": (context) => Popupmunubutton(),
-      },
+      // routes: {
+      // "homepage": (context) => Homepage(),
+      // "popupmenubutton": (context) => Popupmunubutton(),
+      // },
     );
   }
 }
