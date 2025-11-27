@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/task.dart';
 import 'package:uuid/uuid.dart';
+import '../models/task.dart';
+import '../services/firestore_service.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -13,6 +14,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
+  final _categoryController = TextEditingController();
+  DateTime? _dueDate;
+
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               TextFormField(
                 controller: _titleController,
@@ -34,9 +39,39 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 controller: _descController,
                 decoration: const InputDecoration(labelText: "Description"),
               ),
+              TextFormField(
+                controller: _categoryController,
+                decoration: const InputDecoration(labelText: "Category"),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _dueDate == null
+                          ? "No due date selected"
+                          : "Due: ${_dueDate!.toLocal().toString().split(' ')[0]}",
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        setState(() => _dueDate = picked);
+                      }
+                    },
+                    child: const Text("Select Due Date"),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final task = Task(
                       id: const Uuid().v4(),
@@ -44,8 +79,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       description: _descController.text.isEmpty
                           ? null
                           : _descController.text,
+                      dueDate: _dueDate,
+                      category: _categoryController.text.isEmpty
+                          ? "General"
+                          : _categoryController.text,
                     );
-                    Navigator.pop(context, task);
+
+                    await _firestoreService.addTask(task);
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text("Save Task"),
