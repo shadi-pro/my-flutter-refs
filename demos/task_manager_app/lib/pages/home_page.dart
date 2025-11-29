@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/task.dart';
 import '../services/firestore_service.dart';
 import '../widgets/task_card.dart';
@@ -16,45 +17,28 @@ class _HomePageState extends State<HomePage> {
   String _selectedCategory = 'All';
   String _dateFilter = 'Newest';
 
-  // ✅ Bulk mark all as done
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    // AuthGate will redirect to LoginPage
+  }
+
   Future<void> _markAllDone(List<Task> tasks) async {
     final futures = tasks.map((task) {
-      final updatedTask = Task(
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        isDone: true, // force all to done
-        dueDate: task.dueDate,
-        category: task.category,
-        createdAt: task.createdAt,
-      );
+      final updatedTask = task.copyWith(isDone: true);
       return firestoreService.updateTask(updatedTask);
     }).toList();
-
     await Future.wait(futures);
-
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text("All tasks marked as done!")));
   }
 
-  // ✅ Bulk mark all as not done
   Future<void> _markAllNotDone(List<Task> tasks) async {
     final futures = tasks.map((task) {
-      final updatedTask = Task(
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        isDone: false, // force all to not done
-        dueDate: task.dueDate,
-        category: task.category,
-        createdAt: task.createdAt,
-      );
+      final updatedTask = task.copyWith(isDone: false);
       return firestoreService.updateTask(updatedTask);
     }).toList();
-
     await Future.wait(futures);
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("All tasks marked as not done!")),
     );
@@ -66,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Task Manager'),
         actions: [
+          IconButton(icon: const Icon(Icons.logout), onPressed: _logout),
           PopupMenuButton<String>(
             onSelected: (value) {
               setState(() {
@@ -131,16 +116,11 @@ class _HomePageState extends State<HomePage> {
                   final titleMatch = task.title.toLowerCase().contains(
                     _searchQuery,
                   );
-                  final categoryMatch = task.category.toLowerCase().contains(
-                    _searchQuery,
-                  );
-
                   final categoryFilter = _selectedCategory == 'All'
                       ? true
                       : task.category.toLowerCase() ==
                             _selectedCategory.toLowerCase();
-
-                  return (titleMatch || categoryMatch) && categoryFilter;
+                  return titleMatch && categoryFilter;
                 }).toList();
 
                 tasks.sort((a, b) {
@@ -184,22 +164,16 @@ class _HomePageState extends State<HomePage> {
                           return TaskCard(
                             task: task,
                             onToggleDone: () async {
-                              final updatedTask = Task(
-                                id: task.id,
-                                title: task.title,
-                                description: task.description,
+                              final updatedTask = task.copyWith(
                                 isDone: !task.isDone,
-                                dueDate: task.dueDate,
-                                category: task.category,
-                                createdAt: task.createdAt,
                               );
                               await firestoreService.updateTask(updatedTask);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    task.isDone
-                                        ? "Task marked as not done"
-                                        : "Task marked as done",
+                                    updatedTask.isDone
+                                        ? "Task marked as done"
+                                        : "Task marked as not done",
                                   ),
                                   duration: const Duration(seconds: 2),
                                 ),

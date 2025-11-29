@@ -1,20 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/task.dart';
 
 class FirestoreService {
-  final CollectionReference tasksRef = FirebaseFirestore.instance.collection(
-    'tasks',
-  );
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  // Helper to get current user UID
+  String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   // Add a new task
   Future<void> addTask(Task task) async {
-    await tasksRef.doc(task.id).set(task.toMap());
+    await _db
+        .collection('users')
+        .doc(uid)
+        .collection('tasks')
+        .doc(task.id)
+        .set(task.toMap());
   }
 
   // Get all tasks (real-time stream)
   Stream<List<Task>> getTasks() {
-    return tasksRef
-        .orderBy('dueDate', descending: false) // earliest due date first
+    return _db
+        .collection('users')
+        .doc(uid)
+        .collection('tasks')
+        .orderBy('dueDate', descending: false)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
@@ -25,11 +35,16 @@ class FirestoreService {
 
   // Update a task
   Future<void> updateTask(Task task) async {
-    await tasksRef.doc(task.id).update(task.toMap());
+    await _db
+        .collection('users')
+        .doc(uid)
+        .collection('tasks')
+        .doc(task.id)
+        .update(task.toMap());
   }
 
   // Delete a task
   Future<void> deleteTask(String id) async {
-    await tasksRef.doc(id).delete();
+    await _db.collection('users').doc(uid).collection('tasks').doc(id).delete();
   }
 }

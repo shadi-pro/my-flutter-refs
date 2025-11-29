@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import '../models/task.dart';
 import '../services/firestore_service.dart';
+import 'package:uuid/uuid.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -13,38 +13,32 @@ class AddTaskPage extends StatefulWidget {
 class _AddTaskPageState extends State<AddTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _descController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  String _selectedCategory = "General";
   DateTime? _dueDate;
 
-  final FirestoreService _firestoreService = FirestoreService();
-
-  // 🏷️ Predefined categories
-  final List<String> _categories = ['Work', 'Personal', 'General'];
-  String _selectedCategory = 'General';
+  final firestoreService = FirestoreService();
 
   Future<void> _saveTask() async {
     if (_formKey.currentState!.validate()) {
       final task = Task(
-        id: const Uuid().v4(),
+        id: const Uuid().v4(), // unique ID
         title: _titleController.text,
-        description: _descController.text.isEmpty ? null : _descController.text,
-        dueDate: _dueDate,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
         category: _selectedCategory,
-        createdAt: DateTime.now(), // ✅ required field added
+        dueDate: _dueDate,
+        createdAt: DateTime.now(), // always set
       );
 
-      await _firestoreService.addTask(task);
+      await firestoreService.addTask(task);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Task added successfully!"),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Task added successfully!")));
 
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      Navigator.pop(context); // go back to HomePage
     }
   }
 
@@ -53,7 +47,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Add Task")),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -64,55 +58,50 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter a title" : null,
               ),
+              const SizedBox(height: 12),
               TextFormField(
-                controller: _descController,
+                controller: _descriptionController,
                 decoration: const InputDecoration(labelText: "Description"),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
-                items: _categories
-                    .map(
-                      (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value!;
-                  });
-                },
+                items: const [
+                  DropdownMenuItem(value: "General", child: Text("General")),
+                  DropdownMenuItem(value: "Work", child: Text("Work")),
+                  DropdownMenuItem(value: "Personal", child: Text("Personal")),
+                ],
+                onChanged: (value) => setState(() {
+                  _selectedCategory = value!;
+                }),
                 decoration: const InputDecoration(labelText: "Category"),
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _dueDate == null
-                          ? "No due date selected"
-                          : "Due: ${_dueDate!.toLocal().toString().split(' ')[0]}",
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) {
-                        setState(() => _dueDate = picked);
-                      }
-                    },
-                    child: const Text("Select Due Date"),
-                  ),
-                ],
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null) {
+                    setState(() {
+                      _dueDate = picked;
+                    });
+                  }
+                },
+                child: Text(
+                  _dueDate == null
+                      ? "Pick Due Date"
+                      : "Due: ${_dueDate!.toLocal()}".split(' ')[0],
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              ElevatedButton.icon(
+                icon: const Icon(Icons.save),
+                label: const Text("Save Task"),
                 onPressed: _saveTask,
-                child: const Text("Save Task"),
               ),
             ],
           ),
