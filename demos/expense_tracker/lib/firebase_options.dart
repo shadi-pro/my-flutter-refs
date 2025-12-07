@@ -4,16 +4,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -46,7 +36,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '467331489176',
     projectId: 'expense-tracker-app-e4d4c',
     authDomain: 'expense-tracker-app-e4d4c.firebaseapp.com',
-    storageBucket: 'expense-tracker-app-e4d4c.firebasestorage.app',
+    storageBucket: 'expense-tracker-app-e4d4c.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -54,7 +44,7 @@ class DefaultFirebaseOptions {
     appId: '1:467331489176:android:81430f28a3cb4a70821fed',
     messagingSenderId: '467331489176',
     projectId: 'expense-tracker-app-e4d4c',
-    storageBucket: 'expense-tracker-app-e4d4c.firebasestorage.app',
+    storageBucket: 'expense-tracker-app-e4d4c.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +52,7 @@ class DefaultFirebaseOptions {
     appId: '1:467331489176:ios:f315cb929e846f66821fed',
     messagingSenderId: '467331489176',
     projectId: 'expense-tracker-app-e4d4c',
-    storageBucket: 'expense-tracker-app-e4d4c.firebasestorage.app',
+    storageBucket: 'expense-tracker-app-e4d4c.appspot.com',
     iosBundleId: 'com.example.expenseTracker',
   );
 
@@ -71,7 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:467331489176:ios:f315cb929e846f66821fed',
     messagingSenderId: '467331489176',
     projectId: 'expense-tracker-app-e4d4c',
-    storageBucket: 'expense-tracker-app-e4d4c.firebasestorage.app',
+    storageBucket: 'expense-tracker-app-e4d4c.appspot.com',
     iosBundleId: 'com.example.expenseTracker',
   );
 
@@ -81,6 +71,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '467331489176',
     projectId: 'expense-tracker-app-e4d4c',
     authDomain: 'expense-tracker-app-e4d4c.firebaseapp.com',
-    storageBucket: 'expense-tracker-app-e4d4c.firebasestorage.app',
+    storageBucket: 'expense-tracker-app-e4d4c.appspot.com',
   );
 }
