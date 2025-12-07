@@ -11,6 +11,13 @@ Future<void> main() async {
   // ✅ Initialize Firebase with the generated options
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // 🔎 Debug prints to confirm runtime config
+  final app = Firebase.app();
+  print('🔥 Firebase initialized with App ID: ${app.options.appId}');
+  print('🔥 Project ID: ${app.options.projectId}');
+  print('🔥 API Key: ${app.options.apiKey}');
+  print('🔥 Storage Bucket: ${app.options.storageBucket}');
+
   runApp(const ExpenseTrackerApp());
 }
 

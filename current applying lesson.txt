@@ -1,6 +1,5 @@
-current upgraded lesson by ai : 41  E-commerce  UI
   
-last applying lesson: 47 initState and dispose
+last applying lesson: 49 SearchDelegate part1 
 
 
 practical app by ai ->  E-commerce UI 
