@@ -23,14 +23,13 @@
 //  │       └─ app_colors.dart
 //  │       └─ app_theme.dart
 // ------------------------------------------------------------
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'pages/feed_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/add_post_page.dart';
 import 'pages/search_page.dart';
-import 'pages/notifications_page.dart';
+import 'pages/settings_page.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/theme/app_theme.dart';
 
@@ -71,7 +70,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  // Initialize pages in initState
+  // Initialize pages in initState to avoid build context issues
   late final List<Widget> _pages;
 
   @override
@@ -81,7 +80,7 @@ class _MainPageState extends State<MainPage> {
       const FeedPage(),
       const SearchPage(),
       const AddPostPage(),
-      const NotificationsPage(), // ✅ Notifications instead of Settings
+      const SettingsPage(),
       const ProfilePage(),
     ];
   }
@@ -104,19 +103,20 @@ class _MainPageState extends State<MainPage> {
         ),
         centerTitle: true,
         actions: [
-          // Theme toggle - show on all pages
-          IconButton(
-            icon: Icon(
-              themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-              size: 24,
+          // Show theme toggle on all pages except Settings
+          if (_selectedIndex != 3)
+            IconButton(
+              icon: Icon(
+                themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                size: 24,
+              ),
+              onPressed: () {
+                themeProvider.toggleTheme();
+              },
+              tooltip: themeProvider.isDarkMode
+                  ? 'Switch to Light Mode'
+                  : 'Switch to Dark Mode',
             ),
-            onPressed: () {
-              themeProvider.toggleTheme();
-            },
-            tooltip: themeProvider.isDarkMode
-                ? 'Switch to Light Mode'
-                : 'Switch to Dark Mode',
-          ),
         ],
       ),
       body: _pages[_selectedIndex],
@@ -143,9 +143,9 @@ class _MainPageState extends State<MainPage> {
             label: 'Post',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_outlined),
-            activeIcon: Icon(Icons.notifications),
-            label: 'Alerts',
+            icon: Icon(Icons.settings_outlined),
+            activeIcon: Icon(Icons.settings),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outlined),
@@ -155,7 +155,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       floatingActionButton: _selectedIndex == 2
-          ? null // Hide on Add Post page
+          ? null // Hide FAB on Add Post page (redundant)
           : FloatingActionButton(
               onPressed: () {
                 // Jump to Add Post page
@@ -178,7 +178,7 @@ class _MainPageState extends State<MainPage> {
       case 2:
         return 'Create Post';
       case 3:
-        return 'Notifications';
+        return 'Settings';
       case 4:
         return 'Profile';
       default:
