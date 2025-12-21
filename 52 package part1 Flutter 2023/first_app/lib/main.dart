@@ -1,3 +1,5 @@
+// [lesson 52]  :   Package in Flutter part 1
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,11 +17,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Searching Delegate part2',
+      title: 'lesson 52 : Package in Flutter part 1  ',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Searching Delegate part2'),
+      home: const MyHomePage(title: 'Package in Flutter part 1'),
     );
   }
 }
@@ -34,106 +36,83 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //  define the main  ScrollController before buillding the  widget (to be assigned later ) :
+  late ScrollController scrollController;
+
+  // define a {initState} void {initState} function to set the defined [ScrollController] :
+  @override
+  void initState() {
+    // [assign the ScrollController() by the value of upper defined {scrollController}] :
+    scrollController = ScrollController();
+
+    // [this function will be implemented while scroller is working] :
+    scrollController.addListener(() {
+      // [printing the current value of offset scrolling inside Terminal -while scroling -  ]
+      print("${scrollController.offset}");
+    });
+    super.initState();
+  }
+
+  //  disposing  the defined controller  [scrollController] :
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search delegate part 2'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: CustomSearch());
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
+        title: const Text('Package in Flutter part 1'),
+        actions: [],
       ),
-      body: Center(child: ListView(children: [])),
-    );
-  }
-}
+      body: Center(
+        child: ListView(
+          // setting a custom controller (assinged by value upper devined variable {scrollController} ) for the [scroll] inside the main parent contianer :
+          controller: scrollController,
+          // [Types fo packages in Flutter ] :
+          children: [
+            // a - Service Packages  :
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "a - Service package  : google map servie package , SQL-lite local databasa , firebase services  , Notifications service   ",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
 
-class CustomSearch extends SearchDelegate<String> {
-  // Define full data
-  final List<String> username = ['shadi', 'sayed', 'mohamed', 'ahmed', 'ali'];
+            // b - Hardwares Packages  :
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "b -  Mobile Hardwares Packages  :   Wifi  Router service  package , Bluetooth service package ",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            Spacer(),
 
-  // Get filtered results based on query
-  List<String> get filteredList {
-    if (query.isEmpty) {
-      return username;
-    }
-    return username
-        .where((element) => element.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-  }
+            // c - Custom Widgets Shortcuts Packages  :
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "c -  Custom Widgets Shortcuts Packages :  Bottom Navagation Bar with inner timed custom formating \n  Benefit : Optional , but type can save  in creating code  ",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            Spacer(),
 
-  // 1. Build actions (right side of app bar)
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          // Clear the search query
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
+            // d - Custom Widgets Shortcuts Packages  :
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                " How to download the packages : by using  serveral  : \n 1- using  the official site of the {pub.dev} : provide more than 10000 packages ready to be used  + live searching  within   categorizd menu  \n  2- using cmd coding commands \n ",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+          ],
+        ),
       ),
-    ];
-  }
-
-  // 2. Build leading widget (left side of app bar)
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        // Close the search and return null
-        close(context, '');
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  // 3. Build results when user selects a suggestion
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = filteredList;
-
-    if (results.isEmpty) {
-      return const Center(child: Text('No results found'));
-    }
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(results[index]),
-          onTap: () {
-            // Close search and return selected value
-            close(context, results[index]);
-          },
-        );
-      },
-    );
-  }
-
-  // 4. Build suggestions as user types
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = filteredList;
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(suggestions[index]),
-          onTap: () {
-            // Set query to the selected suggestion
-            query = suggestions[index];
-            // Show results
-            showResults(context);
-          },
-        );
-      },
     );
   }
 }

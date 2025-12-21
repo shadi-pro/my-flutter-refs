@@ -1,3 +1,5 @@
+// [lesson 51]  :  Custom  scroll in Flutter
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,11 +17,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Searching Delegate part2',
+      title: 'lesson 51 : Custom Scroll in Flutter  ',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Searching Delegate part2'),
+      home: const MyHomePage(title: 'Custom Flutter Scroll'),
     );
   }
 }
@@ -34,106 +36,81 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //  define the main  ScrollController before buillding the  widget (to be assigned later ) :
+  late ScrollController scrollController;
+
+  // define a {initState} void {initState} function to set the defined [ScrollController] :
+  @override
+  void initState() {
+    // [assign the ScrollController() by the value of upper defined {scrollController}] :
+    scrollController = ScrollController();
+
+    // [this function will be implemented while scroller is working] :
+    scrollController.addListener(() {
+      // [printing the current value of offset scrolling inside Terminal -while scroling -  ]
+      print("${scrollController.offset}");
+    });
+    super.initState();
+  }
+
+  //  disposing  the defined controller  [scrollController] :
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search delegate part 2'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: CustomSearch());
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
+        title: const Text('Custom Scroll in Flutter'),
+        actions: [],
       ),
-      body: Center(child: ListView(children: [])),
-    );
-  }
-}
+      body: Center(
+        child: ListView(
+          // setting a custom controller (assinged by value upper devined variable {scrollController} ) for the [scroll] inside the main parent contianer :
+          controller: scrollController,
+          children: [
+            // 1- [go to BOTTOM button -using defiend custom scroll - using (animateto) method ] :
+            MaterialButton(
+              child: Text("Jump to the Bottom "),
+              onPressed: () {
+                // scrollController.jumpTo(9433);
+                scrollController.animateTo(
+                  9560,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.bounceIn,
+                );
+              },
+            ),
 
-class CustomSearch extends SearchDelegate<String> {
-  // Define full data
-  final List<String> username = ['shadi', 'sayed', 'mohamed', 'ahmed', 'ali'];
+            // 2- generating a list of conditional colored Containers
+            ...List.generate(
+              50,
+              (index) => Container(
+                height: 100,
+                alignment: Alignment.center,
+                child: Text("$index", style: TextStyle(fontSize: 24)),
+                color: index.isEven ? Colors.red : Colors.green,
+              ),
+            ),
 
-  // Get filtered results based on query
-  List<String> get filteredList {
-    if (query.isEmpty) {
-      return username;
-    }
-    return username
-        .where((element) => element.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-  }
-
-  // 1. Build actions (right side of app bar)
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          // Clear the search query
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
+            // 3- [go to TOP button -using defined custom scroll - using the (animateto) method ] :
+            MaterialButton(
+              child: Text("Jump to the TOP"),
+              onPressed: () {
+                // scrollController.jumpTo(0);
+                scrollController.animateTo(
+                  0,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.ease,
+                );
+              },
+            ),
+          ],
+        ),
       ),
-    ];
-  }
-
-  // 2. Build leading widget (left side of app bar)
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        // Close the search and return null
-        close(context, '');
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  // 3. Build results when user selects a suggestion
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = filteredList;
-
-    if (results.isEmpty) {
-      return const Center(child: Text('No results found'));
-    }
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(results[index]),
-          onTap: () {
-            // Close search and return selected value
-            close(context, results[index]);
-          },
-        );
-      },
-    );
-  }
-
-  // 4. Build suggestions as user types
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = filteredList;
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(suggestions[index]),
-          onTap: () {
-            // Set query to the selected suggestion
-            query = suggestions[index];
-            // Show results
-            showResults(context);
-          },
-        );
-      },
     );
   }
 }
