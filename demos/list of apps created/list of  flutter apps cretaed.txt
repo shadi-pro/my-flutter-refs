@@ -1,0 +1,25 @@
+1- [ social_media_clone ] : 
+ - beautiful social media clone apps [ui] , but not indclude the backend until now
+------------------
+
+2- [ atlas_sky ]  :
+ - simple and pratical UI to display the [weather +  country & city  info]  
+ - connected to real api   
+-----------------
+
+3- [ ecommerce_ui ] :
+ - full features ecommerce including  : 
+    a- complete order cycle starting from product picking up -> purchasment and payment process   
+    b- wonderful UI of the frontend including full ecommerce pages and dispalying 
+    c- real firsstore linked backend [including database storage + real products rendering ]    
+    e- real firebase authoirzation and creaging new account   
+----------------------
+ 
+4- [ expense_tracker ] :
+  - good UI , but not enough and not finshed backend 
+
+
+----------------------
+
+5- task_manager_app : 
+    - simple and practical app focued on frontend and flutter component

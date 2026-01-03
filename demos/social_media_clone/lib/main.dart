@@ -34,7 +34,7 @@ import 'pages/search_page.dart';
 import 'pages/notifications_page.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/theme/app_theme.dart';
-import 'core/providers/post_provider.dart'; // NEW
+import 'core/providers/post_provider.dart';
 
 void main() {
   runApp(

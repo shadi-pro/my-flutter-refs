@@ -21,7 +21,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Package in Flutter part 1'),
+      home: const MyHomePage(
+        title:
+            'Package in Flutter part 1    [ types +  installaion   methods  ]',
+      ),
     );
   }
 }
@@ -64,52 +67,87 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Package in Flutter part 1'),
+        title: const Text(
+          'Package [ Types + installation methods] in Flutter part 1',
+        ),
         actions: [],
       ),
+
       body: Center(
         child: ListView(
           // setting a custom controller (assinged by value upper devined variable {scrollController} ) for the [scroll] inside the main parent contianer :
           controller: scrollController,
-          // [Types fo packages in Flutter ] :
+
+          // [I/ Types of packages in Flutter ] :
           children: [
-            // a - Service Packages  :
             Container(
               alignment: Alignment.center,
+              decoration: BoxDecoration(border: Border.all(width: 3)),
               child: Text(
-                "a - Service package  : google map servie package , SQL-lite local databasa , firebase services  , Notifications service   ",
+                "I - Flutter package types :",
                 style: TextStyle(fontSize: 24),
               ),
             ),
 
-            // b - Hardwares Packages  :
+            //  /I/ Types of packages in Flutter   a - Service Packages  :
             Container(
               alignment: Alignment.center,
               child: Text(
-                "b -  Mobile Hardwares Packages  :   Wifi  Router service  package , Bluetooth service package ",
-                style: TextStyle(fontSize: 24),
+                "a- Service package type : google map servie package , SQL-lite local databasa , firebase services  , Notifications service   ",
+                style: TextStyle(fontSize: 18),
               ),
             ),
             Spacer(),
 
-            // c - Custom Widgets Shortcuts Packages  :
+            //  /I/ Types of packages in Flutter /    b - Hardwares Packages  :
             Container(
               alignment: Alignment.center,
               child: Text(
-                "c -  Custom Widgets Shortcuts Packages :  Bottom Navagation Bar with inner timed custom formating \n  Benefit : Optional , but type can save  in creating code  ",
-                style: TextStyle(fontSize: 24),
+                "b -  Mobile Hardwares Packages type   :   Wifi  Router service  package , Bluetooth service package ",
+                style: TextStyle(fontSize: 18),
               ),
             ),
             Spacer(),
 
-            // d - Custom Widgets Shortcuts Packages  :
+            //  /I/ Types of packages in Flutter c - Custom Widgets Shortcuts Packages  :
             Container(
               alignment: Alignment.center,
               child: Text(
-                " How to download the packages : by using  serveral  : \n 1- using  the official site of the {pub.dev} : provide more than 10000 packages ready to be used  + live searching  within   categorizd menu  \n  2- using cmd coding commands \n ",
+                "c -  Custom Widgets Shortcuts Packages type  :  Bottom Navagation Bar with inner timed custom formating \n  Benefit : Optional , but type can save  in creating code  ",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Spacer(),
+
+            // II/ Custom Widgets Shortcuts Packages  :
+            Container(
+              decoration: BoxDecoration(border: Border.all(width: 3)),
+              alignment: Alignment.center,
+              child: Text(
+                "II/  Download & Installation packages  methods :   ",
                 style: TextStyle(fontSize: 24),
               ),
             ),
+
+            Spacer(),
+
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "a-   by using  serveral methods : \n 1- using  the official site of the {pub.dev} : provide more than 10000 packages ready to be used  + live searching  within   categorizd menu  \n    ",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "b-  by using  serveral methods : \n  2- using cmd coding commands \n ",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+
+            Spacer(),
           ],
         ),
       ),

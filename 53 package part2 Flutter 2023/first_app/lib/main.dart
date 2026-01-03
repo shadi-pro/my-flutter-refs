@@ -1,6 +1,10 @@
-// [lesson 51]  :  Custom  scroll in Flutter
+// [lesson 53]  :   Package in Flutter part  2
 
 import 'package:flutter/material.dart';
+
+// importing  the   {AwesomeDialog }:
+import ''; 
+
 
 void main() {
   runApp(const MyApp());
@@ -17,11 +21,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'lesson 51 : Custom Scroll in Flutter  ',
+      title: 'lesson 53 : Package in Flutter part 2  ',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Custom Flutter Scroll'),
+      home: const MyHomePage(
+        title:
+            'Package in Flutter part 2    [ How to use the installed package {aweome_dialog 3.1.0 }  ]',
+      ),
     );
   }
 }
@@ -53,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  //  disposing  the defined controller  [scrollController] :
+  //  disposing the defined controller  [scrollController] :
   @override
   void dispose() {
     scrollController.dispose();
@@ -64,49 +71,46 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Custom Scroll in Flutter'),
+        title: const Text(
+          'Package [ How to use  the installed package] in Flutter project  part 2',
+        ),
         actions: [],
       ),
+
       body: Center(
         child: ListView(
           // setting a custom controller (assinged by value upper devined variable {scrollController} ) for the [scroll] inside the main parent contianer :
           controller: scrollController,
-          children: [
-            // 1- [go to BOTTOM button -using defiend custom scroll - using (animateto) method ] :
-            MaterialButton(
-              child: Text("Jump to the Bottom "),
-              onPressed: () {
-                // scrollController.jumpTo(9433);
-                scrollController.animateTo(
-                  9560,
-                  duration: Duration(seconds: 1),
-                  curve: Curves.bounceIn,
-                );
-              },
-            ),
 
-            // 2- generating a list of conditional colored Containers
-            ...List.generate(
-              50,
-              (index) => Container(
-                height: 100,
-                alignment: Alignment.center,
-                child: Text("$index", style: TextStyle(fontSize: 24)),
-                color: index.isEven ? Colors.red : Colors.green,
+          // [I/ Types of packages in Flutter ] :
+          children: [
+            Container(
+              child: Text(
+                "using the deownloaded  package of the {awesome_dialog)  form    the {pub.dev/packages/awesome_dilaog}  mainfest  exaple  ",
               ),
             ),
 
-            // 3- [go to TOP button -using defined custom scroll - using the (animateto) method ] :
-            MaterialButton(
-              child: Text("Jump to the TOP"),
-              onPressed: () {
-                // scrollController.jumpTo(0);
-                scrollController.animateTo(
-                  0,
-                  duration: Duration(seconds: 1),
-                  curve: Curves.ease,
-                );
-              },
+            Spacer(),
+
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+
+              child: MaterialButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                onPressed: () {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: Dialog.info,
+                    animType: AnimType.rightSlider,
+                    title   :  ,
+                     desc:  ,
+                     butCancelOnPress: () {} ,
+                     butOkOnPress: () {} ,
+                  )..show() ;
+                },
+                child: Text("Show Dialog "),
+              ),
             ),
           ],
         ),
