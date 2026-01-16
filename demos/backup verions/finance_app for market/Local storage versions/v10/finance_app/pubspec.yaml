@@ -1,0 +1,57 @@
+name: finance_app
+description: Finance App - تطبيق مالي متكامل بالعربية
+publish_to: 'none'
+version: 1.1.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  # ✅ التخزين الآمن للإنتاج
+  flutter_secure_storage: ^9.0.0
+  get_storage: ^2.1.1
+  
+  # ✅ التشفير القوي
+  encrypt: ^5.0.1
+  crypto: ^3.0.3
+  
+  # ✅ State Management & UI
+  get: ^4.6.5
+  google_fonts: ^7.0.0
+  intl: any
+  
+  # ✅ الملفات والمشاركة
+  share_plus: ^7.0.1
+  path_provider: ^2.1.1
+  file_picker: ^8.0.0
+  
+  # ✅ Utilities
+  uuid: ^4.3.0
+
+  # ✅ للرسوم البيانية
+  fl_chart: ^0.66.0
+  
+  # ✅ للتصدير إلى CSV
+  csv: ^5.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  # fonts:
+  # - family: Cairo
+  #   fonts:
+  #     - asset: assets/fonts/Cairo-Regular.ttf
+
+  uses-material-design: true
+  
+  # assets:
+  # - assets/images/
