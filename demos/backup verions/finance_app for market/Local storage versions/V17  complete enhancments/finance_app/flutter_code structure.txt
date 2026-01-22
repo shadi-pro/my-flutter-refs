@@ -1,0 +1,88 @@
+Folder PATH listing for volume Learn
+Volume serial number is 00000049 B0EB:8778
+E:\MY MOB PROJECTS\3 FLUTTER ABO HAMZA\DEMOS\FINANCE_APP\LIB
+³   main.dart
+³   
+ÃÄÄÄassets
+³   ÀÄÄÄimages
+ÃÄÄÄcore
+³   ÃÄÄÄconfig
+³   ³       app_config.dart
+³   ³       
+³   ÃÄÄÄconstants
+³   ³       app_colors.dart
+³   ³       app_texts.dart
+³   ³       
+³   ÃÄÄÄerrors
+³   ÃÄÄÄmodels
+³   ³       enums.dart
+³   ³       
+³   ÃÄÄÄnetwork
+³   ÃÄÄÄsecurity
+³   ³       secure_storage_production.dart
+³   ³       security_check.dart
+³   ³       simple_encryption.dart
+³   ³       
+³   ÃÄÄÄusecases
+³   ÀÄÄÄutils
+³           error_handler.dart
+³           
+ÀÄÄÄfeatures
+    ÃÄÄÄalerts
+    ³   ÀÄÄÄpresentation
+    ³       ÃÄÄÄcontrollers
+    ³       ³       alert_controller.dart
+    ³       ³       
+    ³       ÀÄÄÄpages
+    ³               alerts_settings_page.dart
+    ³               
+    ÃÄÄÄbackup
+    ³   ÀÄÄÄpresentation
+    ³       ÃÄÄÄcontrollers
+    ³       ³       backup_controller.dart
+    ³       ³       
+    ³       ÀÄÄÄpages
+    ³               backup_page.dart
+    ³               
+    ÃÄÄÄexpense
+    ³   ÃÄÄÄdata
+    ³   ³   ÃÄÄÄdatasources
+    ³   ³   ÃÄÄÄmodels
+    ³   ³   ÀÄÄÄrepositories
+    ³   ÃÄÄÄdomain
+    ³   ³   ÃÄÄÄentities
+    ³   ³   ³       expense_entity.dart
+    ³   ³   ³       
+    ³   ³   ÃÄÄÄrepositories
+    ³   ³   ÀÄÄÄusecases
+    ³   ÀÄÄÄpresentation
+    ³       ÃÄÄÄbindings
+    ³       ³       expense_binding.dart
+    ³       ³       
+    ³       ÃÄÄÄcontrollers
+    ³       ³       budget_controller.dart
+    ³       ³       expense_controller.dart
+    ³       ³       
+    ³       ÃÄÄÄpages
+    ³       ³       add_expense_page.dart
+    ³       ³       budget_page.dart
+    ³       ³       edit_expense_page.dart
+    ³       ³       home_page.dart
+    ³       ³       monthly_analysis_page.dart
+    ³       ³       reports_page.dart
+    ³       ³       
+    ³       ÀÄÄÄwidgets
+    ³               simple_card.dart
+    ³               
+    ÃÄÄÄexport
+    ³   ÀÄÄÄpresentation
+    ³           export_service.dart
+    ³           
+    ÀÄÄÄsearch
+        ÀÄÄÄpresentation
+            ÃÄÄÄcontrollers
+            ³       expense_search_controller.dart
+            ³       
+            ÀÄÄÄpages
+                    filter_page.dart
+                    
