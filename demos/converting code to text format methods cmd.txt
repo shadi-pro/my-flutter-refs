@@ -17,7 +17,7 @@ Notes:
 
 افتح الـ Terminal داخل المشروع واكتب:
 
-tree lib /f > flutter_code.txt
+tree lib /f > flutter_code_structure.txt
 
 
 ده هيعمل ملف اسمه flutter_code.txt فيه كل الملفات والمسارات.

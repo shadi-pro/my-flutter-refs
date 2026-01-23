@@ -1,11 +1,6 @@
 ===================== 
-FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\core\utils\error_handler.dart 
-===================== 
-===================== 
 FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\main.dart 
 ===================== 
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -27,35 +22,56 @@ void main() async {
   print('🚀 Finance App - Starting...');
 
   try {
-    // 1. تهيئة التواريخ العربية
+    // 1. Initialize Arabic dates
     await initializeDateFormatting('ar_EG', null);
     print('✅ Dates initialized');
 
-    // 2. ✅ تهيئة التشفير
-    await SimpleEncryption.initialize();
-    final encryptionStatus = SimpleEncryption.status;
-    print('✅ Encryption ready: $encryptionStatus');
+    // 2. Initialize encryption (with fallback)
+    try {
+      await SimpleEncryption.initialize();
+      final encryptionStatus = SimpleEncryption.status;
+      print('✅ Encryption ready: $encryptionStatus');
+    } catch (e) {
+      print('⚠️ Encryption warning: $e - Continuing in fallback mode');
+    }
 
-    // 3. ✅ تهيئة الترجمة
-    await AppTranslations.init();
-    print('✅ Translations initialized');
+    // 3. Initialize translations (with fallback)
+    bool translationsReady = false;
+    try {
+      await AppTranslations.init();
+      translationsReady = true;
+      print('✅ Translations initialized');
 
-    // 4. تشغيل التطبيق
-    runApp(const MyApp());
+      // Debug: Check translations
+      print('🔍 Translation check:');
+      print(
+          '   - Arabic keys: ${AppTranslations.translations['ar']?.length ?? 0}');
+      print(
+          '   - English keys: ${AppTranslations.translations['en']?.length ?? 0}');
+    } catch (e) {
+      print('⚠️ Translations init warning: $e');
+      print('⚠️ Continuing without translations');
+    }
+
+    // 4. Run the app
+    runApp(MyApp(translationsReady: translationsReady));
 
     print('✅ App started successfully');
-  } catch (e) {
+  } catch (e, stackTrace) {
     print('❌ App startup error: $e');
+    print('Stack trace: $stackTrace');
     runApp(const EmergencyApp());
   }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool translationsReady;
+
+  const MyApp({super.key, this.translationsReady = false});
 
   @override
   Widget build(BuildContext context) {
-    // حقن المتحكمات
+    // Inject controllers
     Get.put(ExpenseController());
     Get.put(BudgetController());
     Get.put(AlertController());
@@ -63,27 +79,28 @@ class MyApp extends StatelessWidget {
     Get.put(ExpenseSearchController(), tag: ExpenseSearchController.TAG);
 
     return GetMaterialApp(
-      title: 'مالي - Finance App',
+      title: translationsReady ? 'app_title'.tr : 'مالي - Finance App',
       debugShowCheckedModeBanner: false,
 
-      // ============ إعدادات اللغة والتوطين ============
-      translations: AppTranslations(), // ✅ NEW
-      locale: const ui.Locale('ar', 'EG'), // اللغة الافتراضية
-      fallbackLocale: const ui.Locale('en', 'US'), // اللغة الاحتياطية
+      // ============ Language & Localization Settings ============
+      translations: translationsReady ? AppTranslations() : null,
+      locale: const Locale('ar', 'EG'), // Default language (Arabic)
+      fallbackLocale: const Locale('ar', 'EG'), // Fallback language
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        ui.Locale('ar', 'EG'), // العربية - مصر
-        ui.Locale('en', 'US'), // الإنجليزية - أمريكا
+        Locale('ar', 'EG'), // Arabic - Egypt
+        Locale('en', 'US'), // English - USA
       ],
-      // ==============================================
+      // GetMaterialApp automatically handles RTL for Arabic, LTR for English
+      // ==========================================================
 
       themeMode: ThemeMode.system,
 
-      // ✅ Light mode :
+      // ✅ Light mode:
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xFF1565C0),
         colorScheme: ColorScheme.light(
@@ -149,7 +166,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // Dark mode :
+      // ✅ Dark mode:
       darkTheme: ThemeData.dark().copyWith(
         primaryColor: const Color(0xFF0D47A1),
         colorScheme: ColorScheme.dark(
@@ -216,7 +233,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//  Emergency Mode :
+// Emergency Mode (if app fails to start)
 class EmergencyApp extends StatelessWidget {
   const EmergencyApp({super.key});
 
@@ -1371,7 +1388,8 @@ class AlertsSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إعدادات التنبيهات'),
+        title:
+            Text('alerts'.tr), // ✅ Changed from const Text('إعدادات التنبيهات')
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -1391,10 +1409,11 @@ class AlertsSettingsPage extends StatelessWidget {
                         const Icon(Icons.account_balance_wallet,
                             color: Colors.orange),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'تنبيهات الميزانية',
-                            style: TextStyle(
+                            'budget_alerts'
+                                .tr, // ✅ Changed from 'تنبيهات الميزانية'
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1413,7 +1432,12 @@ class AlertsSettingsPage extends StatelessWidget {
                     Obx(() => Column(
                           children: [
                             Text(
-                              'عند الوصول إلى ${_controller.budgetAlertThreshold.value.toInt()}% من الميزانية',
+                              'budget_alert_threshold'.trParams({
+                                // ✅ Changed with parameter
+                                'value': _controller.budgetAlertThreshold.value
+                                    .toInt()
+                                    .toString()
+                              }),
                               style: const TextStyle(color: Colors.grey),
                             ),
                             Slider(
@@ -1451,10 +1475,11 @@ class AlertsSettingsPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.warning, color: Colors.red),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'تنبيه المصروفات الكبيرة',
-                            style: TextStyle(
+                            'large_expense_alert'
+                                .tr, // ✅ Changed from 'تنبيه المصروفات الكبيرة'
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1475,7 +1500,13 @@ class AlertsSettingsPage extends StatelessWidget {
                     Obx(() => Column(
                           children: [
                             Text(
-                              'عند إنفاق أكثر من ${_controller.largeExpenseThreshold.value} ج.م',
+                              'large_expense_alert_threshold'.trParams({
+                                // ✅ Changed with parameters
+                                'value': _controller.largeExpenseThreshold.value
+                                    .toInt()
+                                    .toString(),
+                                'currency': 'currency_suffix'.tr
+                              }),
                               style: const TextStyle(color: Colors.grey),
                             ),
                             Slider(
@@ -1484,7 +1515,7 @@ class AlertsSettingsPage extends StatelessWidget {
                               max: 2000,
                               divisions: 19,
                               label:
-                                  '${_controller.largeExpenseThreshold.value.toInt()} ج.م',
+                                  '${_controller.largeExpenseThreshold.value.toInt()} ${'currency_suffix'.tr}', // ✅ Added currency
                               onChanged: _controller
                                       .largeExpenseAlertsEnabled.value
                                   ? (value) {
@@ -1511,20 +1542,22 @@ class AlertsSettingsPage extends StatelessWidget {
                   children: [
                     const Icon(Icons.summarize, color: Colors.blue),
                     const SizedBox(width: 12),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'ملخص يومي',
-                            style: TextStyle(
+                            'daily_summary'.tr, // ✅ Changed from 'ملخص يومي'
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'عرض ملخص يومي للإيرادات والمصروفات',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            'daily_summary_desc'
+                                .tr, // ✅ Changed from 'عرض ملخص يومي للإيرادات والمصروفات'
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -1550,7 +1583,8 @@ class AlertsSettingsPage extends StatelessWidget {
                   _controller.showLargeExpenseAlert(600, 'تسوق');
                 },
                 icon: const Icon(Icons.notifications_active),
-                label: const Text('اختبار التنبيهات'),
+                label:
+                    Text('test_alerts'.tr), // ✅ Changed from 'اختبار التنبيهات'
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
@@ -2152,7 +2186,8 @@ class BackupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('budget'.tr),
+        title: Text(
+            'backup'.tr), // ✅ Changed from const Text('budget'.tr) - was wrong!
         centerTitle: true,
       ),
       body: SafeArea(
@@ -2201,9 +2236,9 @@ class BackupPage extends StatelessWidget {
               const SizedBox(height: 24),
 
               // عنوان قسم الإجراءات
-              const Text(
-                'الإجراءات',
-                style: TextStyle(
+              Text(
+                'actions'.tr, // ✅ Added new key
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -2218,8 +2253,10 @@ class BackupPage extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.save, color: Colors.green),
-                  title: const Text('إنشاء نسخة احتياطية كاملة'),
-                  subtitle: const Text('حفظ جميع البيانات في ملف'),
+                  title: Text('create_backup'
+                      .tr), // ✅ Changed from 'إنشاء نسخة احتياطية كاملة'
+                  subtitle: Text('save_copy'
+                      .tr), // ✅ Changed from 'حفظ جميع البيانات في ملف'
                   trailing: Obx(() => _controller.isLoading.value
                       ? const SizedBox(
                           width: 20,
@@ -2241,8 +2278,9 @@ class BackupPage extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.restore, color: Colors.orange),
-                  title: const Text('استعادة النسخة الاحتياطية'),
-                  subtitle: const Text('تحميل البيانات من ملف النسخ الاحتياطي'),
+                  title: Text('restore'
+                      .tr), // ✅ Changed from 'استعادة النسخة الاحتياطية'
+                  subtitle: Text('restore_backup_desc'.tr), // ✅ Added new key
                   trailing: Obx(() => _controller.isLoading.value
                       ? const SizedBox(
                           width: 20,
@@ -2264,8 +2302,10 @@ class BackupPage extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.description, color: Colors.blue),
-                  title: const Text('تصدير تقرير نصي'),
-                  subtitle: const Text('مشاركة ملخص المعاملات'),
+                  title: Text(
+                      'export_data'.tr), // ✅ Changed from 'تصدير تقرير نصي'
+                  subtitle: Text(
+                      'save_copy'.tr), // ✅ Changed from 'مشاركة ملخص المعاملات'
                   trailing: Obx(() => _controller.isLoading.value
                       ? const SizedBox(
                           width: 20,
@@ -2280,9 +2320,9 @@ class BackupPage extends StatelessWidget {
               const SizedBox(height: 24),
 
               // قسم النصائح المهمة
-              const Text(
-                '💡 نصائح مهمة',
-                style: TextStyle(
+              Text(
+                'important_tips'.tr, // ✅ Added new key
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -2294,29 +2334,29 @@ class BackupPage extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TipsRow(
                         icon: Icons.schedule,
-                        text: 'قم بإنشاء نسخة احتياطية أسبوعياً',
+                        text: 'tip_weekly_backup'.tr, // ✅ Added new key
                       ),
                       SizedBox(height: 8),
                       TipsRow(
                         icon: Icons.folder,
-                        text: 'احفظ ملفات النسخ الاحتياطي في مكان آمن',
+                        text: 'tip_save_location'.tr, // ✅ Added new key
                       ),
                       SizedBox(height: 8),
                       TipsRow(
                         icon: Icons.security,
-                        text: 'لا تشارك ملفات النسخ الاحتياطي مع الآخرين',
+                        text: 'tip_dont_share'.tr, // ✅ Added new key
                       ),
                       SizedBox(height: 8),
                       TipsRow(
                         icon: Icons.devices,
-                        text: 'يمكنك الاستعادة على أي جهاز',
+                        text: 'tip_cross_device'.tr, // ✅ Added new key
                       ),
                     ],
                   ),
@@ -2344,12 +2384,12 @@ class BackupPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               Icon(Icons.analytics, color: Colors.purple),
                               SizedBox(width: 8),
                               Text(
-                                'إحصائيات النسخ الاحتياطي',
+                                'backup_stats'.tr, // ✅ Added new key
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -2362,13 +2402,13 @@ class BackupPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               _buildStatItem(
-                                'ملفات النسخ',
+                                'backup_files'.tr, // ✅ Added new key
                                 fileCount.toString(),
                                 Icons.folder,
                                 Colors.blue,
                               ),
                               Obx(() => _buildStatItem(
-                                    'آخر نسخة',
+                                    'last_backup'.tr, // ✅ Added new key
                                     _controller.lastBackupDate.value != null
                                         ? DateFormat('MM/dd').format(
                                             _controller.lastBackupDate.value!)
@@ -2405,16 +2445,16 @@ class BackupPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'ملاحظة أمنية مهمة',
-                            style: TextStyle(
+                          Text(
+                            'security_note'.tr, // ✅ Added new key
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.orange,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'بياناتك مخزنة محلياً على جهازك ولا يتم رفعها لأي مكان. تأكد من حفظ ملفات النسخ الاحتياطي في مكان آمن.',
+                            'security_note_desc'.tr, // ✅ Added new key
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[700],
@@ -2435,7 +2475,7 @@ class BackupPage extends StatelessWidget {
                   _showAdvancedOptions();
                 },
                 icon: const Icon(Icons.settings),
-                label: const Text('خيارات متقدمة'),
+                label: Text('advanced_options'.tr), // ✅ Added new key
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
@@ -2510,9 +2550,9 @@ class BackupPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'خيارات متقدمة للنسخ الاحتياطي',
-              style: TextStyle(
+            Text(
+              'advanced_options'.tr, // ✅ Added new key
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -2522,8 +2562,8 @@ class BackupPage extends StatelessWidget {
             // خيارات متقدمة
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('مسح تاريخ النسخ الاحتياطي'),
-              subtitle: const Text('حذف معلومات آخر نسخة احتياطية'),
+              title: Text('clear_backup_history'.tr), // ✅ Added new key
+              subtitle: Text('clear_backup_history_desc'.tr), // ✅ Added new key
               onTap: () {
                 Get.back();
                 _controller.clearBackupData();
@@ -2532,8 +2572,8 @@ class BackupPage extends StatelessWidget {
 
             ListTile(
               leading: const Icon(Icons.info, color: Colors.blue),
-              title: const Text('معلومات عن النظام'),
-              subtitle: const Text('عرض تفاصيل تخزين البيانات'),
+              title: Text('system_info'.tr), // ✅ Added new key
+              subtitle: Text('system_info_desc'.tr), // ✅ Added new key
               onTap: () {
                 Get.back();
                 _showSystemInfo();
@@ -2545,7 +2585,7 @@ class BackupPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: Get.back,
-                child: const Text('إغلاق'),
+                child: Text('close'.tr),
               ),
             ),
           ],
@@ -2557,36 +2597,36 @@ class BackupPage extends StatelessWidget {
   void _showSystemInfo() {
     Get.dialog(
       AlertDialog(
-        title: const Text('معلومات النظام'),
+        title: Text('system_info'.tr), // ✅ Added new key
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'تخزين البيانات المحلي',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                'local_storage'.tr, // ✅ Added new key
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text('• التطبيق يستخدم GetStorage للتخزين المحلي'),
-              const Text('• البيانات مشفرة باستخدام AES-256'),
-              const Text('• الملفات المؤقتة تخزن في مجلد التطبيق'),
+              Text('• ${'storage_getstorage'.tr}'), // ✅ Added new key
+              Text('• ${'storage_encryption'.tr}'), // ✅ Added new key
+              Text('• ${'storage_temp_files'.tr}'), // ✅ Added new key
               const SizedBox(height: 16),
-              const Text(
-                'التوافق',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                'compatibility'.tr, // ✅ Added new key
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text('• تدعم Android و iOS'),
-              const Text('• يمكن الاستعادة على أي جهاز'),
-              const Text('• تنسيق البيانات: JSON'),
+              Text('• ${'compat_android_ios'.tr}'), // ✅ Added new key
+              Text('• ${'compat_restore_any'.tr}'), // ✅ Added new key
+              Text('• ${'compat_data_format'.tr}'), // ✅ Added new key
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: Get.back,
-            child: const Text('حسناً'),
+            child: Text('ok'.tr),
           ),
         ],
       ),
@@ -2985,7 +3025,7 @@ FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\features\expe
 ===================== 
 // lib/features/expense/presentation/controllers/expense_controller.dart
 
-// import 'dart:convert'; //  For UTF-8 encoding supporting
+// KEEP ALL OTHER IMPORTS:
 import 'package:finance_app/core/models/enums.dart';
 import 'package:finance_app/features/alerts/presentation/controllers/alert_controller.dart';
 import 'package:finance_app/features/expense/domain/entities/expense_entity.dart';
@@ -3015,11 +3055,8 @@ class ExpenseController extends GetxController {
     try {
       await loadExpenses();
 
-      // Only add test data if absolutely no expenses exist
       if (expenses.isEmpty) {
         print('📝 No expenses found, considering test data...');
-        // You might want to make this configurable or remove in production
-        // await addTestData();
       }
     } catch (e, stackTrace) {
       print('❌ Error initializing data: $e');
@@ -3053,7 +3090,6 @@ class ExpenseController extends GetxController {
             if (item is Map<String, dynamic>) {
               final expense = ExpenseEntity.fromMap(item);
 
-              // Validate the loaded expense
               if (expense.amount > 0 && expense.id.isNotEmpty) {
                 loadedExpenses.add(expense);
                 successCount++;
@@ -3088,7 +3124,6 @@ class ExpenseController extends GetxController {
         expenses.value = [];
         calculateRealTotals();
 
-        // Try to recover by clearing corrupted data
         await SimpleEncryption.remove('expenses');
         ErrorHandler.showWarning(
           'تم اكتشاف بيانات تالفة، تم مسح البيانات القديمة',
@@ -3109,7 +3144,6 @@ class ExpenseController extends GetxController {
     }
   }
 
-  // Marked as @visibleForTesting - remove or disable in production
   @visibleForTesting
   Future<void> addTestData() async {
     try {
@@ -3175,7 +3209,6 @@ class ExpenseController extends GetxController {
 
   Future<void> addExpense(ExpenseEntity expense) async {
     try {
-      // Enhanced validation
       if (expense.amount <= 0) {
         throw Exception('المبلغ يجب أن يكون أكبر من صفر');
       }
@@ -3185,7 +3218,6 @@ class ExpenseController extends GetxController {
         throw Exception('يرجى إدخال وصف للمعاملات في الفئة "أخرى"');
       }
 
-      // Check for duplicates (optional feature)
       if (_isDuplicateExpense(expense)) {
         final shouldProceed = await ErrorHandler.showConfirmationDialog(
           title: 'معاملة مشابهة',
@@ -3206,11 +3238,11 @@ class ExpenseController extends GetxController {
 
       ErrorHandler.showSuccess('تم إضافة المعاملة بنجاح');
 
-      // Trigger alerts if enabled
       final alertController = Get.find<AlertController>();
       alertController.checkExpenseAlerts(
           expense.amount, expense.category.arabicName);
 
+      // Get BudgetController when needed
       if (Get.isRegistered<BudgetController>()) {
         final budgetController = Get.find<BudgetController>();
         alertController.checkBudgetAlerts(
@@ -3245,7 +3277,6 @@ class ExpenseController extends GetxController {
         throw Exception('فهرس غير صالح');
       }
 
-      // Validate the expense
       if (expense.amount <= 0) {
         throw Exception('المبلغ يجب أن يكون أكبر من صفر');
       }
@@ -3269,7 +3300,6 @@ class ExpenseController extends GetxController {
         throw Exception('فهرس غير صالح');
       }
 
-      // Get expense details for confirmation
       final expenseToDelete = expenses[index];
 
       expenses.removeAt(index);
@@ -3278,7 +3308,6 @@ class ExpenseController extends GetxController {
 
       ErrorHandler.showSuccess('تم حذف المعاملة بنجاح');
 
-      // Log the deletion (for analytics or audit trail)
       print(
           '🗑️ Deleted expense: ${expenseToDelete.category.arabicName} - ${expenseToDelete.amount}');
     } catch (e, stackTrace) {
@@ -3308,7 +3337,6 @@ class ExpenseController extends GetxController {
       expenses.clear();
       await SimpleEncryption.remove('expenses');
 
-      // Also clear other related data
       await SimpleEncryption.remove('monthlyBudget');
       await SimpleEncryption.remove('categoryBudgets');
 
@@ -3413,7 +3441,6 @@ class ExpenseController extends GetxController {
     return expenses.map((e) => e.toMap()).toList();
   }
 
-  /// Get expenses for the current month
   List<ExpenseEntity> get currentMonthExpenses {
     final now = DateTime.now();
     return expenses.where((expense) {
@@ -3421,7 +3448,6 @@ class ExpenseController extends GetxController {
     }).toList();
   }
 
-  /// Get the most expensive category
   String? get mostExpensiveCategory {
     if (expenses.isEmpty) return null;
 
@@ -3658,9 +3684,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
 ===================== 
 FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\features\expense\presentation\pages\budget_page.dart 
 ===================== 
-// lib/features/budget/presentation/pages/budget_page.dart
+// lib/features/expense/presentation/pages/budget_page.dart
 
-import 'package:finance_app/features/expense/presentation/controllers/expense_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -3675,7 +3700,8 @@ class BudgetPage extends StatefulWidget {
 
 class _BudgetPageState extends State<BudgetPage> {
   final BudgetController _controller = Get.find();
-  final ExpenseController _expenseController = Get.find();
+  // Get ExpenseController without importing it
+  dynamic get _expenseController => Get.find();
 
   final TextEditingController _budgetController = TextEditingController();
   final Map<String, TextEditingController> _categoryControllers = {};
@@ -3685,7 +3711,7 @@ class _BudgetPageState extends State<BudgetPage> {
     super.initState();
     _budgetController.text = _controller.monthlyBudget.value.toStringAsFixed(2);
 
-    // تهيئة controllers للفئات
+    // Initialize category controllers
     for (var category in _controller.defaultCategories) {
       _categoryControllers[category] = TextEditingController(
         text:
@@ -3706,57 +3732,57 @@ class _BudgetPageState extends State<BudgetPage> {
   void _saveMonthlyBudget() {
     final value = double.tryParse(_budgetController.text) ?? 0.0;
     _controller.setMonthlyBudget(value);
-    Get.snackbar('تم الحفظ', 'تم تحديث الميزانية الشهرية');
+    Get.snackbar('saved'.tr, 'monthly_budget_updated'.tr);
   }
 
   void _saveCategoryBudget(String category) {
     final controller = _categoryControllers[category];
     final value = double.tryParse(controller?.text ?? '0') ?? 0.0;
     _controller.setCategoryBudget(category, value);
-    Get.snackbar('تم الحفظ', 'تم تحديث ميزانية $category');
+    Get.snackbar('saved'.tr, 'category_budget_updated'.tr);
   }
 
   void _showBudgetSummary() {
     final alerts = _controller.getBudgetAlerts();
 
     Get.defaultDialog(
-      title: 'ملخص الميزانية',
+      title: 'budget_summary'.tr,
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // الميزانية الشهرية
+            // Monthly Budget
             _buildSummaryItem(
-              'الميزانية الشهرية',
-              '${_controller.monthlyBudget.value} ج.م',
+              'monthly_budget'.tr,
+              '${_controller.monthlyBudget.value} ${'currency_suffix'.tr}',
               Icons.account_balance_wallet,
               Colors.blue,
             ),
 
             _buildSummaryItem(
-              'إجمالي الإنفاق',
-              '${_expenseController.totalExpense.value} ج.م',
+              'spent'.tr,
+              '${_expenseController.totalExpense.value} ${'currency_suffix'.tr}',
               Icons.arrow_upward,
               Colors.red,
             ),
 
             _buildSummaryItem(
-              'المتبقي',
-              '${_controller.remainingBudget.toStringAsFixed(2)} ج.م',
+              'remaining'.tr,
+              '${_controller.remainingBudget.toStringAsFixed(2)} ${'currency_suffix'.tr}',
               Icons.savings,
               _controller.remainingBudget >= 0 ? Colors.green : Colors.red,
             ),
 
             const Divider(),
 
-            // التحذيرات
+            // Alerts
             if (alerts.isNotEmpty) ...[
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  'تحذيرات:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  'alerts'.tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               ...alerts
@@ -3769,7 +3795,7 @@ class _BudgetPageState extends State<BudgetPage> {
           ],
         ),
       ),
-      textConfirm: 'حسناً',
+      textConfirm: 'ok'.tr,
       onConfirm: Get.back,
     );
   }
@@ -3777,35 +3803,34 @@ class _BudgetPageState extends State<BudgetPage> {
   Widget _buildSummaryItem(
       String title, String value, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(width: 12),
-          Expanded(child: Text(title)),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: color,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(width: 12),
+            Expanded(child: Text(title)),
+            Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('إدارة الميزانية'),
+        title: Text('budget'.tr),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.assessment),
             onPressed: _showBudgetSummary,
-            tooltip: 'ملخص الميزانية',
+            tooltip: 'budget_summary'.tr,
           ),
         ],
       ),
@@ -3814,16 +3839,16 @@ class _BudgetPageState extends State<BudgetPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // الميزانية الشهرية
+            // Monthly Budget Card
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'الميزانية الشهرية',
-                      style: TextStyle(
+                    Text(
+                      'monthly_budget'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -3832,7 +3857,7 @@ class _BudgetPageState extends State<BudgetPage> {
                     TextField(
                       controller: _budgetController,
                       decoration: InputDecoration(
-                        labelText: 'المبلغ (ج.م)',
+                        labelText: 'amount_with_currency'.tr,
                         prefixIcon: const Icon(Icons.attach_money),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.save),
@@ -3860,7 +3885,9 @@ class _BudgetPageState extends State<BudgetPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'تم إنفاق ${percentage.toStringAsFixed(1)}% من الميزانية',
+                            percentage >= 100
+                                ? 'budget_exceeded'.tr
+                                : '${percentage.toStringAsFixed(1)}% ${'spent'.tr.toLowerCase()}',
                             style: TextStyle(
                               color: percentage >= 100
                                   ? Colors.red
@@ -3879,28 +3906,28 @@ class _BudgetPageState extends State<BudgetPage> {
 
             const SizedBox(height: 24),
 
-            // ميزانية الفئات
+            // Category Budgets Card
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'ميزانية الفئات',
-                      style: TextStyle(
+                    Text(
+                      'category_budget'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'حدد ميزانية لكل فئة من فئات المصروفات',
-                      style: TextStyle(color: Colors.grey),
+                    Text(
+                      'set_category_budget'.tr,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
 
-                    // قائمة الفئات
+                    // Categories List
                     ..._controller.defaultCategories.map((category) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -3915,7 +3942,7 @@ class _BudgetPageState extends State<BudgetPage> {
                                 controller: _categoryControllers[category],
                                 decoration: InputDecoration(
                                   hintText: '0.00',
-                                  suffixText: 'ج.م',
+                                  suffixText: 'currency_suffix'.tr,
                                   contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 8,
@@ -3941,32 +3968,32 @@ class _BudgetPageState extends State<BudgetPage> {
 
             const SizedBox(height: 24),
 
-            // ملاحظات
-            const Card(
+            // Notes Card
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'ملاحظات',
-                      style: TextStyle(
+                      'notes'.tr,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      '• الميزانية تساعدك على التحكم في إنفاقك',
-                      style: TextStyle(color: Colors.grey),
+                      'note_budget_control'.tr,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     Text(
-                      '• سيتم إعلامك عند اقترابك من تجاوز الميزانية',
-                      style: TextStyle(color: Colors.grey),
+                      'note_budget_alert'.tr,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     Text(
-                      '• يمكنك تعديل الميزانية في أي وقت',
-                      style: TextStyle(color: Colors.grey),
+                      'note_budget_edit'.tr,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -3975,14 +4002,14 @@ class _BudgetPageState extends State<BudgetPage> {
 
             const SizedBox(height: 32),
 
-            // أزرار التحكم
+            // Control Buttons
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: _showBudgetSummary,
                     icon: const Icon(Icons.assessment),
-                    label: const Text('عرض الملخص'),
+                    label: Text('show_summary'.tr),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -4002,7 +4029,7 @@ class _BudgetPageState extends State<BudgetPage> {
                       });
                     },
                     icon: const Icon(Icons.restart_alt),
-                    label: const Text('إعادة تعيين'),
+                    label: Text('reset'.tr),
                   ),
                 ),
               ],
@@ -4018,13 +4045,12 @@ FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\features\expe
 ===================== 
 // lib/features/expense/presentation/pages/edit_expense_page.dart
 
-import 'dart:ui' as ui;
+import 'package:finance_app/features/expense/domain/entities/expense_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/models/enums.dart';
-import '../../../../features/expense/domain/entities/expense_entity.dart';
 import '../controllers/expense_controller.dart';
 
 class EditExpensePage extends StatefulWidget {
@@ -4055,41 +4081,18 @@ class _EditExpensePageState extends State<EditExpensePage> {
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  final List<String> _categories = [
-    "food".tr,
-    "transportation".tr,
-    "marketing".tr,
-    "entertainment".tr,
-    "health".tr,
-    "learn".tr,
-    "living".tr,
-    "bills".tr,
-    "salary".tr,
-    "investment".tr,
-    "gifts".tr,
-    "others".tr,
-  ];
-
-  final List<String> _paymentMethods = [
-    "cash".tr,
-    "credit_card".tr,
-    "bank_transfer".tr,
-    "e_wallet".tr,
-    "cheque".tr,
-  ];
-
   @override
   void initState() {
     super.initState();
 
     _amount = (widget.expenseData['amount'] as num).toDouble();
-    _category = widget.expenseData['category']?.toString() ?? "others".tr;
+    // Store the category as is (Arabic from database)
+    _category = widget.expenseData['category']?.toString() ?? "أخرى";
     _description = widget.expenseData['description']?.toString() ?? '';
     _date = DateTime.parse(
         widget.expenseData['date']?.toString() ?? DateTime.now().toString());
     _isIncome = widget.expenseData['isIncome'] == true;
-    _paymentMethod =
-        widget.expenseData['paymentMethod']?.toString() ?? "cash".tr;
+    _paymentMethod = widget.expenseData['paymentMethod']?.toString() ?? "نقدي";
 
     _amountController.text = _amount.toString();
     _descriptionController.text = _description;
@@ -4103,127 +4106,251 @@ class _EditExpensePageState extends State<EditExpensePage> {
   }
 
   String _formatDate(DateTime date) {
-    try {
-      return DateFormat('yyyy/MM/dd', Get.locale?.languageCode ?? 'en')
-          .format(date);
-    } catch (_) {
-      return DateFormat('yyyy/MM/dd').format(date);
+    return DateFormat('yyyy/MM/dd').format(date);
+  }
+
+  // Convert Arabic category to current language
+  String _getTranslatedCategory(String arabicCategory) {
+    // Map Arabic categories to translation keys
+    final categoryMap = {
+      'طعام': 'food',
+      'مواصلات': 'transportation',
+      'تسوق': 'marketing',
+      'ترفيه': 'entertainment',
+      'صحة': 'health',
+      'تعليم': 'learn',
+      'سكن': 'living',
+      'فواتير': 'bills',
+      'مرتب': 'salary',
+      'استثمار': 'investment',
+      'هدايا': 'gifts',
+      'أخرى': 'others',
+    };
+
+    final key = categoryMap[arabicCategory] ?? 'others';
+    return key.tr;
+  }
+
+  // Convert current language back to Arabic for saving
+  String _getArabicCategory(String translatedCategory) {
+    // Map translation back to Arabic
+    final reverseMap = {
+      'food': 'طعام',
+      'transportation': 'مواصلات',
+      'marketing': 'تسوق',
+      'entertainment': 'ترفيه',
+      'health': 'صحة',
+      'learn': 'تعليم',
+      'living': 'سكن',
+      'bills': 'فواتير',
+      'salary': 'مرتب',
+      'investment': 'استثمار',
+      'gifts': 'هدايا',
+      'others': 'أخرى',
+    };
+
+    // Find the Arabic equivalent
+    for (var entry in reverseMap.entries) {
+      if (entry.key.tr == translatedCategory) {
+        return entry.value;
+      }
     }
+
+    // Fallback: check if it's already Arabic
+    if (reverseMap.containsValue(translatedCategory)) {
+      return translatedCategory;
+    }
+
+    return 'أخرى';
+  }
+
+  // Same for payment methods
+  String _getTranslatedPaymentMethod(String arabicMethod) {
+    final paymentMap = {
+      'نقدي': 'cash',
+      'بطاقة ائتمان': 'credit_card',
+      'تحويل بنكي': 'bank_transfer',
+      'محفظة إلكترونية': 'e_wallet',
+      'شيك': 'cheque',
+    };
+
+    final key = paymentMap[arabicMethod] ?? 'cash';
+    return key.tr;
+  }
+
+  String _getArabicPaymentMethod(String translatedMethod) {
+    final reverseMap = {
+      'cash': 'نقدي',
+      'credit_card': 'بطاقة ائتمان',
+      'bank_transfer': 'تحويل بنكي',
+      'e_wallet': 'محفظة إلكترونية',
+      'cheque': 'شيك',
+    };
+
+    for (var entry in reverseMap.entries) {
+      if (entry.key.tr == translatedMethod) {
+        return entry.value;
+      }
+    }
+
+    if (reverseMap.containsValue(translatedMethod)) {
+      return translatedMethod;
+    }
+
+    return 'نقدي';
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: ui.TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(_isIncome ? 'edit_income'.tr : 'edit_expense'.tr),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: _saveExpense,
-              tooltip: 'save_changes'.tr,
-            ),
-          ],
-        ),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                SwitchListTile(
-                  title: Text(_isIncome ? 'income'.tr : 'expense'.tr),
-                  value: _isIncome,
-                  onChanged: (v) => setState(() => _isIncome = v),
+    // Get translated values for dropdowns
+    var translatedCategory = _getTranslatedCategory(_category);
+    var translatedPaymentMethod = _getTranslatedPaymentMethod(_paymentMethod);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_isIncome ? 'edit_income'.tr : 'edit_expense'.tr),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _saveExpense,
+            tooltip: 'save_changes'.tr,
+          ),
+        ],
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: Text(_isIncome ? 'income'.tr : 'expense'.tr),
+                value: _isIncome,
+                onChanged: (v) => setState(() => _isIncome = v),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'amount'.tr,
+                  border: const OutlineInputBorder(),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'amount'.tr),
-                  validator: (v) => v == null || double.tryParse(v) == null
-                      ? 'enter_valid_number'.tr
-                      : null,
-                  onSaved: (v) => _amount = double.parse(v!),
+                validator: (v) => v == null || double.tryParse(v) == null
+                    ? 'enter_valid_number'.tr
+                    : null,
+                onSaved: (v) => _amount = double.parse(v!),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField(
+                value: translatedCategory, // Use translated value
+                decoration: InputDecoration(
+                  labelText: 'category'.tr,
+                  border: const OutlineInputBorder(),
                 ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField(
-                  value: _category,
-                  decoration: InputDecoration(labelText: 'category'.tr),
-                  items: _categories
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
-                  onChanged: (v) => setState(() => _category = v!),
+                items: [
+                  "food".tr,
+                  "transportation".tr,
+                  "marketing".tr,
+                  "entertainment".tr,
+                  "health".tr,
+                  "learn".tr,
+                  "living".tr,
+                  "bills".tr,
+                  "salary".tr,
+                  "investment".tr,
+                  "gifts".tr,
+                  "others".tr,
+                ]
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    // Store the translated value, will convert back to Arabic when saving
+                    translatedCategory = v!;
+                    _category = _getArabicCategory(v);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: Text('date'.tr),
+                subtitle: Text(_formatDate(_date)),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: _date,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (picked != null) {
+                    setState(() => _date = picked);
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField(
+                value: translatedPaymentMethod, // Use translated value
+                decoration: InputDecoration(
+                  labelText: 'payment_method'.tr,
+                  border: const OutlineInputBorder(),
                 ),
-                const SizedBox(height: 16),
-                ListTile(
-                  title: Text('date'.tr),
-                  subtitle: Text(_formatDate(_date)),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: _date,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      locale: Get.locale,
-                    );
-                    if (picked != null) {
-                      setState(() => _date = picked);
-                    }
-                  },
+                items: [
+                  "cash".tr,
+                  "credit_card".tr,
+                  "bank_transfer".tr,
+                  "e_wallet".tr,
+                  "cheque".tr,
+                ]
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    translatedPaymentMethod = v!;
+                    _paymentMethod = _getArabicPaymentMethod(v);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'description'.tr,
+                  border: const OutlineInputBorder(),
                 ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField(
-                  value: _paymentMethod,
-                  decoration: InputDecoration(labelText: 'payment_method'.tr),
-                  items: _paymentMethods
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
-                  onChanged: (v) => setState(() => _paymentMethod = v!),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 3,
-                  decoration: InputDecoration(labelText: 'description'.tr),
-                  onSaved: (v) => _description = v ?? '',
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _saveExpense,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Text('save_changes'.tr),
-                      ),
+                onSaved: (v) => _description = v ?? '',
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _saveExpense,
+                      child: Text('save_changes'.tr),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Get.back(),
-                        child: Text('cancel'.tr),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _deleteExpense,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
                   ),
-                  child: Text('delete_transaction'.tr),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      child: Text('cancel'.tr),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _deleteExpense,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
-              ],
-            ),
+                child: Text('delete_transaction'.tr),
+              ),
+            ],
           ),
         ),
       ),
@@ -4237,11 +4364,12 @@ class _EditExpensePageState extends State<EditExpensePage> {
     final expense = ExpenseEntity(
       id: widget.expenseData['id']?.toString(),
       amount: _amount,
-      category: ExpenseCategory.fromString(_category),
+      category: ExpenseCategory.fromString(_category), // Already in Arabic
       description: _description,
       date: _date,
       isIncome: _isIncome,
-      paymentMethod: PaymentMethod.fromString(_paymentMethod),
+      paymentMethod:
+          PaymentMethod.fromString(_paymentMethod), // Already in Arabic
     );
 
     _controller.updateExpense(widget.expenseIndex, expense);
@@ -4478,6 +4606,7 @@ class HomePage extends StatelessWidget {
                           Obx(() {
                             final filteredExpenses =
                                 searchController.filteredExpenses;
+
                             final totalExpenses = controller.expenses.length;
 
                             if (searchController.searchQuery.value.isNotEmpty ||
@@ -5041,7 +5170,7 @@ class MonthlyAnalysisPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تحليل شهري - مقارنة الأشهر'),
+        title: Text('monthly_analysis_comparison'.tr),
         centerTitle: true,
       ),
       body: monthlyData.isEmpty
@@ -5060,8 +5189,8 @@ class MonthlyAnalysisPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          const Text(
-                            'مقارنة الدخل والمصروفات خلال 6 أشهر',
+                          Text(
+                            'monthly_comparison'.tr,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -5092,8 +5221,8 @@ class MonthlyAnalysisPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'مقارنة مفصلة لكل شهر',
+                          Text(
+                            'detailed_comparison'.tr,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -5297,12 +5426,17 @@ class MonthlyAnalysisPage extends StatelessWidget {
       child: DataTable(
         columnSpacing: 24,
         dataRowMinHeight: 40,
-        columns: const [
-          DataColumn(label: Text('الشهر')),
-          DataColumn(label: Text('الدخل', textAlign: TextAlign.center)),
-          DataColumn(label: Text('المصروف', textAlign: TextAlign.center)),
-          DataColumn(label: Text('الرصيد', textAlign: TextAlign.center)),
-          DataColumn(label: Text('المعاملات', textAlign: TextAlign.center)),
+        columns: [
+          DataColumn(label: Text('month'.tr)),
+          DataColumn(
+              label: Text('income_header'.tr, textAlign: TextAlign.center)),
+          DataColumn(
+              label: Text('expense_header'.tr, textAlign: TextAlign.center)),
+          DataColumn(
+              label: Text('balance_header'.tr, textAlign: TextAlign.center)),
+          DataColumn(
+              label:
+                  Text('transactions_header'.tr, textAlign: TextAlign.center)),
         ],
         rows: data.map((monthData) {
           return DataRow(cells: [
@@ -5361,7 +5495,7 @@ class MonthlyAnalysisPage extends StatelessWidget {
                       color: Colors.blue,
                     ),
                   ),
-                  const Text('إجمالي المعاملات',
+                  Text('total_transactions_stat'.tr,
                       style: TextStyle(fontSize: 12)),
                 ],
               ),
@@ -5389,7 +5523,7 @@ class MonthlyAnalysisPage extends StatelessWidget {
                       color: totalBalance >= 0 ? Colors.green : Colors.red,
                     ),
                   ),
-                  const Text('صافي الفترة', style: TextStyle(fontSize: 12)),
+                  Text('net_period'.tr, style: TextStyle(fontSize: 12)),
                 ],
               ),
             ),
@@ -5410,16 +5544,16 @@ class MonthlyAnalysisPage extends StatelessWidget {
             color: Colors.grey[400],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'لا توجد بيانات كافية للتحليل',
+          Text(
+            'no_analysis_data'.tr,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'أضف معاملات لترى التحليل الشهري',
+          Text(
+            'add_transactions_for_analysis'.tr,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -5508,7 +5642,7 @@ class ReportsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('التقارير والإحصائيات'),
+        title: Text('reports'.tr),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -5532,7 +5666,7 @@ class ReportsPage extends StatelessWidget {
                         const Icon(Icons.calendar_today, color: Colors.blue),
                         const SizedBox(width: 8),
                         Text(
-                          'إحصائيات ${_getCurrentMonth()}',
+                          '${'statistics'.tr} ${_getCurrentMonth()}', // ✅ Changed from 'إحصائيات'
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -5548,20 +5682,20 @@ class ReportsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatItem(
-                          'المعاملات',
+                          'transactions'.tr, // ✅ Changed from 'المعاملات'
                           '${monthlyStats['count']}',
                           Icons.receipt,
                           Colors.blue,
                         ),
                         _buildStatItem(
-                          'الدخل',
-                          '${(monthlyStats['income'] as double).toStringAsFixed(2)} ج.م',
+                          'income'.tr, // ✅ Changed from 'الدخل'
+                          '${(monthlyStats['income'] as double).toStringAsFixed(2)} ${'currency_suffix'.tr}',
                           Icons.arrow_downward,
                           Colors.green,
                         ),
                         _buildStatItem(
-                          'المصروف',
-                          '${(monthlyStats['expense'] as double).toStringAsFixed(2)} ج.م',
+                          'expense'.tr, // ✅ Changed from 'المصروف'
+                          '${(monthlyStats['expense'] as double).toStringAsFixed(2)} ${'currency_suffix'.tr}',
                           Icons.arrow_upward,
                           Colors.red,
                         ),
@@ -5592,7 +5726,7 @@ class ReportsPage extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            'رصيد الشهر: ${(monthlyStats['balance'] as double).toStringAsFixed(2)} ج.م',
+                            '${'monthly_balance'.tr}: ${(monthlyStats['balance'] as double).toStringAsFixed(2)} ${'currency_suffix'.tr}', // ✅ Changed from 'رصيد الشهر'
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -5613,7 +5747,7 @@ class ReportsPage extends StatelessWidget {
 
             // توزيع الدخل حسب الفئة
             _buildCategorySection(
-              'توزيع الدخل',
+              'income_distribution'.tr, // ✅ Changed from 'توزيع الدخل'
               incomeCategories,
               Colors.green,
               Icons.arrow_downward,
@@ -5623,7 +5757,7 @@ class ReportsPage extends StatelessWidget {
 
             // توزيع المصروفات حسب الفئة
             _buildCategorySection(
-              'توزيع المصروفات',
+              'expense_distribution'.tr, // ✅ Changed from 'توزيع المصروفات'
               expenseCategories,
               Colors.red,
               Icons.arrow_upward,
@@ -5646,16 +5780,20 @@ class ReportsPage extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.download, color: Colors.blue),
-                    title: const Text('تصدير البيانات'),
-                    subtitle: const Text('حفظ نسخة من جميع المعاملات'),
+                    title: Text(
+                        'export_data'.tr), // ✅ Changed from 'تصدير البيانات'
+                    subtitle: Text('save_copy'
+                        .tr), // ✅ Changed from 'حفظ نسخة من جميع المعاملات'
                     trailing: const Icon(Icons.chevron_right),
                     onTap: _exportData,
                   ),
                   const Divider(height: 0),
                   ListTile(
                     leading: const Icon(Icons.insights, color: Colors.purple),
-                    title: const Text('تحليل شهري'),
-                    subtitle: const Text('مقارنة الأشهر السابقة'),
+                    title: Text(
+                        'monthly_analysis'.tr), // ✅ Changed from 'تحليل شهري'
+                    subtitle: Text('compare_previous_months'
+                        .tr), // ✅ Changed from 'مقارنة الأشهر السابقة'
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
                       Get.to(() => MonthlyAnalysisPage());
@@ -5736,7 +5874,7 @@ class ReportsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${total.toStringAsFixed(2)} ج.م',
+                  '${total.toStringAsFixed(2)} ${'currency_suffix'.tr}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: color,
@@ -5746,12 +5884,12 @@ class ReportsPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             if (categories.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
-                    'لا توجد بيانات',
-                    style: TextStyle(color: Colors.grey),
+                    'no_data'.tr, // ✅ Changed from 'لا توجد بيانات'
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ),
               )
@@ -5772,7 +5910,7 @@ class ReportsPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${entry.value.toStringAsFixed(2)} ج.م',
+                            '${entry.value.toStringAsFixed(2)} ${'currency_suffix'.tr}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -5830,9 +5968,9 @@ class ReportsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'إحصائيات إضافية',
-              style: TextStyle(
+            Text(
+              'additional_stats'.tr, // ✅ Changed from 'إحصائيات إضافية'
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -5853,9 +5991,11 @@ class ReportsPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Text(
-                        'إجمالي المعاملات',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Text(
+                        'total_transactions'
+                            .tr, // ✅ Changed from 'إجمالي المعاملات'
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -5873,9 +6013,11 @@ class ReportsPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Text(
-                        'معاملات حديثة',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Text(
+                        'recent_transactions'
+                            .tr, // ✅ Changed from 'معاملات حديثة'
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -5903,9 +6045,10 @@ class ReportsPage extends StatelessWidget {
                               : Colors.red,
                         ),
                       ),
-                      const Text(
-                        'الرصيد الحالي',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      Text(
+                        'current_balance'.tr, // ✅ Changed from 'الرصيد الحالي'
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -5921,29 +6064,29 @@ class ReportsPage extends StatelessWidget {
   String _getCurrentMonth() {
     final now = DateTime.now();
     final months = [
-      'يناير',
-      'فبراير',
-      'مارس',
-      'أبريل',
-      'مايو',
-      'يونيو',
-      'يوليو',
-      'أغسطس',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر'
+      'january'.tr,
+      'february'.tr,
+      'march'.tr,
+      'april'.tr,
+      'may'.tr,
+      'june'.tr,
+      'july'.tr,
+      'august'.tr,
+      'september'.tr,
+      'october'.tr,
+      'november'.tr,
+      'december'.tr,
     ];
     return '${months[now.month - 1]} ${now.year}';
   }
 
   void _exportData() async {
     try {
-      // التحقق من وجود بيانات
       if (controller.expenses.isEmpty) {
         Get.snackbar(
-          'لا توجد بيانات',
-          'لا توجد معاملات لتصديرها',
+          'no_transactions_to_export'.tr, // ✅ Changed from 'لا توجد بيانات'
+          'no_transactions_to_export'
+              .tr, // ✅ Changed from 'لا توجد معاملات لتصديرها'
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.orange[100],
           colorText: Colors.orange[900],
@@ -5951,13 +6094,12 @@ class ReportsPage extends StatelessWidget {
         return;
       }
 
-      // عرض خيارات التصدير
       final result = await ExportService.exportData(controller.expensesAsMap);
 
       if (result == true) {
         Get.snackbar(
-          '✅ تم التصدير بنجاح',
-          'تم حفظ ملف التصدير بنجاح',
+          'export_success'.tr, // ✅ Changed from '✅ تم التصدير بنجاح'
+          'export_file_saved'.tr, // ✅ Changed from 'تم حفظ ملف التصدير بنجاح'
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.green[100],
@@ -5966,8 +6108,9 @@ class ReportsPage extends StatelessWidget {
       }
     } catch (e) {
       Get.snackbar(
-        '❌ خطأ في التصدير',
-        'حدث خطأ أثناء التصدير: $e',
+        'export_error'.tr, // ✅ Changed from '❌ خطأ في التصدير'
+        'export_failed'
+            .trParams({'e': e.toString()}), // ✅ Changed with parameter
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red[100],
         colorText: Colors.red[900],
@@ -6281,9 +6424,11 @@ FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\features\sear
 ===================== 
 // lib/features/search/presentation/controllers/expense_search_controller.dart
 
+import 'dart:async';
+
 import 'package:get/get.dart';
 import '../../../expense/presentation/controllers/expense_controller.dart';
-import '../../../expense/domain/entities/expense_entity.dart'; // أضف هذا الاستيراد
+import '../../../expense/domain/entities/expense_entity.dart';
 import '../../../../core/utils/error_handler.dart';
 
 class ExpenseSearchController extends GetxController {
@@ -6298,16 +6443,55 @@ class ExpenseSearchController extends GetxController {
   final endDate = Rx<DateTime?>(null);
   final isFilterActive = false.obs;
 
+  // 🔧 إضافة cache ذكي مع تتبع التغييرات
+  List<Map<String, dynamic>>? _cachedFilteredMaps;
+  List<ExpenseEntity>? _cachedFilteredEntities;
+  String _lastFilterHash = '';
+  bool _shouldInvalidateCache = true;
+
+  // 🔧 إضافة timer للبحث
+  Timer? _searchTimer;
+
+  @override
+  void onClose() {
+    _searchTimer?.cancel();
+    _searchTimer = null;
+    _cachedFilteredMaps = null;
+    _cachedFilteredEntities = null;
+    super.onClose();
+  }
+
   @override
   void onInit() {
     super.onInit();
-    ever(searchQuery, (_) => updateFilterStatus());
-    ever(selectedCategory, (_) => updateFilterStatus());
-    ever(selectedType, (_) => updateFilterStatus());
-    ever(minAmount, (_) => updateFilterStatus());
-    ever(maxAmount, (_) => updateFilterStatus());
-    ever(startDate, (_) => updateFilterStatus());
-    ever(endDate, (_) => updateFilterStatus());
+
+    // 🔧 إضافة worker لإبطال cache عند أي تغيير
+    everAll([
+      searchQuery,
+      selectedCategory,
+      selectedType,
+      minAmount,
+      maxAmount,
+      startDate,
+      endDate
+    ], (_) {
+      _shouldInvalidateCache = true;
+      updateFilterStatus();
+    });
+  }
+
+  // 🔧 دالة لحساب hash للفلاتر الحالية
+  String _getFilterHash() {
+    return '${searchQuery.value}_${selectedCategory.value}_${selectedType.value}_'
+        '${minAmount.value}_${maxAmount.value}_'
+        '${startDate.value?.millisecondsSinceEpoch}_${endDate.value?.millisecondsSinceEpoch}';
+  }
+
+  // 🔧 دالة لإبطال cache
+  void invalidateCache() {
+    _shouldInvalidateCache = true;
+    _cachedFilteredMaps = null;
+    _cachedFilteredEntities = null;
   }
 
   void updateFilterStatus() {
@@ -6322,75 +6506,69 @@ class ExpenseSearchController extends GetxController {
 
   List<Map<String, dynamic>> get filteredExpenses {
     try {
+      // 🔧 التحقق من cache أولاً
+      final currentHash = _getFilterHash();
+      if (!_shouldInvalidateCache &&
+          _cachedFilteredMaps != null &&
+          _lastFilterHash == currentHash) {
+        return _cachedFilteredMaps!;
+      }
+
       final expenseController = Get.find<ExpenseController>();
 
-      // الحل: تحويل List<ExpenseEntity> إلى List<Map<String, dynamic>>
-      List<Map<String, dynamic>> expenses = expenseController.expenses
-          .map((expenseEntity) => expenseEntity.toMap())
-          .toList();
+      // 🔧 تحسين: استخدام List<ExpenseEntity> مباشرة (أسرع)
+      List<ExpenseEntity> expenseEntities =
+          List.from(expenseController.expenses);
 
-      // فلترة بالنص
+      // 🔧 تطبيق الفلاتر على List<ExpenseEntity> مباشرة
       if (searchQuery.value.isNotEmpty) {
-        expenses = expenses.where((expense) {
-          return expense['category']
-                  .toString()
+        expenseEntities = expenseEntities.where((expense) {
+          return expense.category.arabicName
                   .toLowerCase()
                   .contains(searchQuery.value.toLowerCase()) ||
-              expense['description']
-                  .toString()
+              expense.description
                   .toLowerCase()
                   .contains(searchQuery.value.toLowerCase());
         }).toList();
       }
 
-      // فلترة بالفئة
       if (selectedCategory.value != 'الكل') {
-        expenses = expenses.where((expense) {
-          return expense['category'] == selectedCategory.value;
+        expenseEntities = expenseEntities.where((expense) {
+          return expense.category.arabicName == selectedCategory.value;
         }).toList();
       }
 
-      // فلترة بالنوع
       if (selectedType.value != 'الكل') {
-        expenses = expenses.where((expense) {
-          if (selectedType.value == 'دخل') return expense['isIncome'] == true;
-          if (selectedType.value == 'مصروف')
-            return expense['isIncome'] == false;
+        expenseEntities = expenseEntities.where((expense) {
+          if (selectedType.value == 'دخل') return expense.isIncome == true;
+          if (selectedType.value == 'مصروف') return expense.isIncome == false;
           return true;
         }).toList();
       }
 
-      // فلترة بالمبلغ
-      expenses = expenses.where((expense) {
-        final amount = (expense['amount'] as num).toDouble();
-        return amount >= minAmount.value && amount <= maxAmount.value;
+      expenseEntities = expenseEntities.where((expense) {
+        return expense.amount >= minAmount.value &&
+            expense.amount <= maxAmount.value;
       }).toList();
 
-      // فلترة بالتاريخ
       if (startDate.value != null) {
-        expenses = expenses.where((expense) {
-          try {
-            final expenseDate = DateTime.parse(expense['date']);
-            return expenseDate.isAfter(startDate.value!);
-          } catch (e) {
-            return false;
-          }
+        expenseEntities = expenseEntities.where((expense) {
+          return expense.date.isAfter(startDate.value!);
         }).toList();
       }
 
       if (endDate.value != null) {
-        expenses = expenses.where((expense) {
-          try {
-            final expenseDate = DateTime.parse(expense['date']);
-            return expenseDate.isBefore(endDate.value!);
-          } catch (e) {
-            return false;
-          }
+        expenseEntities = expenseEntities.where((expense) {
+          return expense.date.isBefore(endDate.value!);
         }).toList();
       }
 
-      // ترتيب حسب التاريخ (الأحدث أولاً)
-      expenses.sort((a, b) {
+      // 🔧 التحويل النهائي إلى Map مرة واحدة فقط
+      final List<Map<String, dynamic>> result =
+          expenseEntities.map((expense) => expense.toMap()).toList();
+
+      // 🔧 الترتيب على List<Map> (أسرع بعد الفلترة)
+      result.sort((a, b) {
         try {
           final dateA = DateTime.parse(a['date']);
           final dateB = DateTime.parse(b['date']);
@@ -6400,20 +6578,35 @@ class ExpenseSearchController extends GetxController {
         }
       });
 
-      return expenses;
+      // 🔧 تحديث cache
+      _cachedFilteredMaps = result;
+      _cachedFilteredEntities = expenseEntities;
+      _lastFilterHash = currentHash;
+      _shouldInvalidateCache = false;
+
+      return result;
     } catch (e) {
       ErrorHandler.showError('خطأ في تصفية البيانات: $e');
       return [];
     }
   }
 
-  // دالة جديدة للحصول على ExpenseEntity مباشرة
   List<ExpenseEntity> get filteredExpenseEntities {
     try {
+      // 🔧 استخدام cache إذا متوفر
+      if (_cachedFilteredEntities != null && !_shouldInvalidateCache) {
+        return _cachedFilteredEntities!;
+      }
+
+      // 🔧 إذا لم يكن في cache، احسب من filteredExpenses (التي ستحدث cache)
+      if (filteredExpenses.isNotEmpty && _cachedFilteredEntities != null) {
+        return _cachedFilteredEntities!;
+      }
+
+      // 🔧 الحساب المباشر (نفس منطق filteredExpenses لكن يرجع Entities مباشرة)
       final expenseController = Get.find<ExpenseController>();
       List<ExpenseEntity> expenses = List.from(expenseController.expenses);
 
-      // فلترة بالنص
       if (searchQuery.value.isNotEmpty) {
         expenses = expenses.where((expense) {
           return expense.category.arabicName
@@ -6425,14 +6618,12 @@ class ExpenseSearchController extends GetxController {
         }).toList();
       }
 
-      // فلترة بالفئة
       if (selectedCategory.value != 'الكل') {
         expenses = expenses.where((expense) {
           return expense.category.arabicName == selectedCategory.value;
         }).toList();
       }
 
-      // فلترة بالنوع
       if (selectedType.value != 'الكل') {
         expenses = expenses.where((expense) {
           if (selectedType.value == 'دخل') return expense.isIncome == true;
@@ -6441,13 +6632,11 @@ class ExpenseSearchController extends GetxController {
         }).toList();
       }
 
-      // فلترة بالمبلغ
       expenses = expenses.where((expense) {
         return expense.amount >= minAmount.value &&
             expense.amount <= maxAmount.value;
       }).toList();
 
-      // فلترة بالتاريخ
       if (startDate.value != null) {
         expenses = expenses.where((expense) {
           return expense.date.isAfter(startDate.value!);
@@ -6460,8 +6649,11 @@ class ExpenseSearchController extends GetxController {
         }).toList();
       }
 
-      // ترتيب حسب التاريخ (الأحدث أولاً)
       expenses.sort((a, b) => b.date.compareTo(a.date));
+
+      // 🔧 تحديث cache
+      _cachedFilteredEntities = expenses;
+      _shouldInvalidateCache = false;
 
       return expenses;
     } catch (e) {
@@ -6480,6 +6672,7 @@ class ExpenseSearchController extends GetxController {
     maxAmount.value = 1000000.0;
     startDate.value = null;
     endDate.value = null;
+    invalidateCache(); // 🔧 إبطال cache عند إعادة التعيين
     ErrorHandler.showSuccess('تم إعادة تعيين جميع الفلاتر');
   }
 
@@ -6509,7 +6702,7 @@ class ExpenseSearchController extends GetxController {
 ===================== 
 FILE: E:\My Mob Projects\3 Flutter abo hamza\demos\finance_app\lib\features\search\presentation\pages\filter_page.dart 
 ===================== 
-// lib/features/search/presentation/pages/filter_page.dart  :
+// lib/features/search/presentation/pages/filter_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6544,24 +6737,28 @@ class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     final uniqueCategories = _getUniqueCategories();
-    final categories = ['الكل', ...uniqueCategories];
-    final types = ['الكل', 'دخل', 'مصروف'];
+    final categories = ['all'.tr, ...uniqueCategories]; // ✅ Changed from 'الكل'
+    final types = [
+      'all'.tr,
+      'income'.tr,
+      'expense'.tr
+    ]; // ✅ Changed from ['الكل', 'دخل', 'مصروف']
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تصفية المعاملات'),
+        title: Text('filter_transactions'.tr),
         centerTitle: true,
         actions: [
           TextButton(
             onPressed: () {
               searchController.resetFilters();
               setState(() {
-                _selectedCategory = 'الكل';
-                _selectedType = 'الكل';
+                _selectedCategory = 'all'.tr; // ✅ Changed from 'الكل'
+                _selectedType = 'all'.tr; // ✅ Changed from 'الكل'
               });
               Get.back();
             },
-            child: const Text('إعادة تعيين'),
+            child: Text('reset_all'.tr), // ✅ Changed from 'إعادة تعيين'
           ),
         ],
       ),
@@ -6573,10 +6770,10 @@ class _FilterPageState extends State<FilterPage> {
             _buildSearchSection(),
             const SizedBox(height: 24),
             _buildFilterSection(
-              'الفئة',
+              'category'.tr, // ✅ Changed from 'الفئة'
               Icons.category,
               categories,
-              _selectedCategory ?? 'الكل',
+              _selectedCategory ?? 'all'.tr, // ✅ Changed from 'الكل'
               (value) {
                 setState(() {
                   _selectedCategory = value;
@@ -6586,10 +6783,10 @@ class _FilterPageState extends State<FilterPage> {
             ),
             const SizedBox(height: 24),
             _buildFilterSection(
-              'النوع',
+              'type'.tr, // ✅ Changed from 'النوع'
               Icons.swap_vert,
               types,
-              _selectedType ?? 'الكل',
+              _selectedType ?? 'all'.tr, // ✅ Changed from 'الكل'
               (value) {
                 setState(() {
                   _selectedType = value;
@@ -6620,13 +6817,13 @@ class _FilterPageState extends State<FilterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.search, color: Colors.blue),
-                SizedBox(width: 8),
+                const Icon(Icons.search, color: Colors.blue),
+                const SizedBox(width: 8),
                 Text(
-                  'البحث',
-                  style: TextStyle(
+                  'search'.tr, // ✅ Changed from 'البحث'
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -6639,7 +6836,7 @@ class _FilterPageState extends State<FilterPage> {
                 text: searchController.searchQuery.value,
               ),
               decoration: InputDecoration(
-                hintText: 'ابحث بالوصف أو الفئة...',
+                hintText: 'filter_search_hint'.tr,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -6727,13 +6924,13 @@ class _FilterPageState extends State<FilterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.blue),
-                SizedBox(width: 8),
+                const Icon(Icons.attach_money, color: Colors.blue),
+                const SizedBox(width: 8),
                 Text(
-                  'نطاق المبلغ',
-                  style: TextStyle(
+                  'filter_amount_range'.tr, // ✅ Changed from 'نطاق المبلغ'
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -6745,13 +6942,13 @@ class _FilterPageState extends State<FilterPage> {
               children: [
                 Expanded(
                   child: Text(
-                    'من: ${searchController.minAmount.value.toInt()} ج.م',
+                    '${'min'.tr}: ${searchController.minAmount.value.toInt()} ${'currency_suffix'.tr}', // ✅ Added translations
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    'إلى: ${searchController.maxAmount.value.toInt()} ج.م',
+                    '${'max'.tr}: ${searchController.maxAmount.value.toInt()} ${'currency_suffix'.tr}', // ✅ Added translations
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -6790,9 +6987,9 @@ class _FilterPageState extends State<FilterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'نتائج البحث',
-              style: TextStyle(
+            Text(
+              'search_results'.tr, // ✅ Changed from 'نتائج البحث'
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -6805,7 +7002,11 @@ class _FilterPageState extends State<FilterPage> {
               return Column(
                 children: [
                   Text(
-                    'تم العثور على $filteredCount من أصل $totalCount',
+                    'found'.trParams({
+                      // ✅ Changed with parameters
+                      'filtered': filteredCount.toString(),
+                      'total': totalCount.toString()
+                    }),
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 8),
@@ -6835,7 +7036,7 @@ class _FilterPageState extends State<FilterPage> {
             onPressed: () {
               Get.back();
             },
-            child: const Text('تطبيق الفلترة'),
+            child: Text('apply_filters'.tr), // ✅ Changed from 'تطبيق الفلترة'
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -6851,12 +7052,13 @@ class _FilterPageState extends State<FilterPage> {
             onPressed: () {
               searchController.resetFilters();
               setState(() {
-                _selectedCategory = 'الكل';
-                _selectedType = 'الكل';
+                _selectedCategory = 'all'.tr; // ✅ Changed from 'الكل'
+                _selectedType = 'all'.tr; // ✅ Changed from 'الكل'
               });
               Get.back();
             },
-            child: const Text('إعادة تعيين الكل'),
+            child: Text(
+                'clear_all_filters'.tr), // ✅ Changed from 'إعادة تعيين الكل'
             style: OutlinedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -6872,7 +7074,6 @@ class _FilterPageState extends State<FilterPage> {
   List<String> _getUniqueCategories() {
     final categories = <String>{};
     for (var expense in expenseController.expenses) {
-      // الحل 1: إذا كان expense هو ExpenseEntity
       categories.add(expense.category.arabicName);
     }
     return categories.toList()..sort();
