@@ -111,36 +111,19 @@ text
  الوضع الحالي اخر تطوير كنا ننجزه سويا:
 اضافة ميزة اللغة العربية على كل ملفات التطبيق 
 وبعدها اضافة مزايا اخرى للمشروع مثل : 
-1- Swipe to Delete : في home_page.dart:
-2-  Pull-to-Refresh : 
-// في home_page.dart حول ListView.builder إلى:
-RefreshIndicator(
-  onRefresh: () async {
-    await controller.loadExpenses();
-    await searchController.invalidateCache();
-  },
-  child: ListView.builder(...),
-)
-
-3-  Financial Goals :
+1- Swipe to Delete : في home_page.dart:   Done
+2-  Pull-to-Refresh : Done
+3-  Financial Goals :  => Still not done   
 // صفحة جديدة: financial_goals_page.dart
 class FinancialGoalsPage extends StatelessWidget {
   // أهداف: توفير لسيارة، عمرة، دراسة، إلخ
   // مع تتبع التقدم وتذكيرات
 }
 
-4- Recurring Bills : // معاملة بتتكرر شهرياً/سنوياً // تنبيه قبل الاستحقاق // دفع تلقائي (تنبيه فقط)
-5- PDF Export : (احترافية)  : // تصدير تقرير شهري PDF // مع تصميم جميل وإحصائيات // يمكن مشاركته أو حفظه
+4- Recurring Bills : // معاملة بتتكرر شهرياً/سنوياً // تنبيه قبل الاستحقاق // دفع تلقائي (تنبيه فقط)    =>  Still not done   
+5- PDF Export : (احترافية)  : // تصدير تقرير شهري PDF // مع تصميم جميل وإحصائيات // يمكن مشاركته أو حفظه    => Still not done   
 -----------------------------------------------
 ---------------------------------------------------
 
 
-
-المحادثة 3: المحتوى الفني العبقري
-text
-الهدف: صناعة محتوى يعكس مواهبك
-التركيز: فيديوهات تجمع الموسيقى/الرسم/البرمجة
-المخرجات: شهرة أوسع + دخل إضافي
-
-
-
+ 

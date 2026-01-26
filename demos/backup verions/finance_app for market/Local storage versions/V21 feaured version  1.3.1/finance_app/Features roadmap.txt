@@ -1,0 +1,90 @@
+🗺️ Roadmap for New Features
+🎯 Short‑Term (High Impact, Low Complexity)
+These are quick wins that plug directly into your existing architecture:
+
+Recurring Transactions
+
+Extend ExpenseEntity with recurrence rules (weekly, monthly, yearly).
+
+Add a scheduler in ExpenseController to auto‑generate entries.
+
+UI: toggle in Add/Edit Expense pages.
+
+Multi‑Currency Support (basic)
+
+Add currency field to ExpenseEntity.
+
+Integrate exchange rates via search_finance.
+
+Show converted totals in ReportsPage.
+
+Improved Budget Alerts
+
+Add customizable thresholds (e.g., alert at 70%, 90%).
+
+UI: settings page for alert preferences.
+
+📈 Mid‑Term (Moderate Complexity, Big Value)
+These features expand functionality and analytics:
+
+Investments & Assets Module
+
+New folder: features/investments/.
+
+Track stocks, crypto, savings accounts.
+
+Integrate with search_finance for live prices.
+
+Reports: portfolio balance alongside expenses.
+
+Subscriptions Management
+
+Dedicated page for recurring bills (Netflix, rent, utilities).
+
+Auto‑reminders before due dates.
+
+Advanced Reports
+
+Add pie charts for category distribution.
+
+Forecast next month’s expenses using historical averages.
+
+🚀 Long‑Term (High Complexity, Strategic Differentiators)
+These make your app stand out in the market:
+
+Cloud Sync & Backup
+
+Firebase integration (already hinted in pubspec.yaml).
+
+Sync across devices, restore from cloud.
+
+AI‑Powered Insights
+
+Smart alerts: “Food spending increased 20% compared to last month.”
+
+Predictive budgeting: forecast overspending risk.
+
+Personalized tips based on spending patterns.
+
+Multi‑User / Family Accounts
+
+Shared budgets and expenses across multiple users.
+
+Role‑based access (admin vs member).
+
+🔎 Suggested Order of Implementation
+Recurring Transactions → quick win, improves daily usability.
+
+Multi‑Currency Support (basic) → makes app globally relevant.
+
+Investments Module → adds new dimension beyond expenses.
+
+Subscriptions Management → complements recurring transactions.
+
+Advanced Reports → enhances analytics.
+
+Cloud Sync → ensures reliability and scalability.
+
+AI Insights → differentiates your app in the market.
+
+Multi‑User Accounts → long‑term expansion for families/teams.
