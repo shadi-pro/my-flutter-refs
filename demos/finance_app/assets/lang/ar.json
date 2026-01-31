@@ -339,5 +339,12 @@
   "not_existed_goal": "الهدف غير موجود",
   "success_Contribution_added": "تم إضافة المساهمة بنجاح",
   "filter_error_message": "خطأ في تصفية البيانات: {e}",
-  "not_specified": "غير محدد"
+  "not_specified": "غير محدد",
+  "save_goal_error": "خطأ في حفظ الهدف: {e}",
+  "add_goal_failed": "فشل في إضافة الهدف: {e}",
+  "update_goal_failed": "فشل في تحديث الهدف: {e}",
+  "delete_goal_failed": "فشل في حذف الهدف: {e}",
+  "add_contribution_failed": "فشل في إضافة المساهمة: {e}",
+  "goal_achieved": "🎉 مبروك! لقد حققت هدفك: {title}",
+  "monthly_payment": "مدفوع شهري - {month}/{year}"
 }

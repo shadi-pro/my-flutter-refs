@@ -336,5 +336,12 @@
   "not_existed_goal": "Goal is not existed",
   "success_Contribution_added": "Contribution added successfully !",
   "filter_error_message": "Error filtering data: {e}",
-  "not_specified": "Not specified"
+  "not_specified": "Not specified" ,
+  "save_goal_error": "Error saving goal: {e}",
+  "add_goal_failed": "Failed to add goal: {e}",
+  "update_goal_failed": "Failed to update goal: {e}",
+  "delete_goal_failed": "Failed to delete goal: {e}",
+  "add_contribution_failed": "Failed to add contribution: {e}",
+  "goal_achieved": "🎉 Congratulations! You achieved your goal: {title}",
+  "monthly_payment": "Monthly payment - {month}/{year}"
 }
