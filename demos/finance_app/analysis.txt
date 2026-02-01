@@ -1,0 +1,23 @@
+Analyzing finance_app...                                        
+
+   info - The local variable '_storedData' starts with an underscore - lib\core\utils\data_migrator.dart:9:13 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable '_storedData' isn't used - lib\core\utils\data_migrator.dart:9:13 - unused_local_variable
+warning - The value of the field '_storage' isn't used - lib\features\expense\presentation\controllers\budget_controller.dart:13:20 - unused_field
+   info - The local variable '_categoryExpenses' starts with an underscore - lib\features\expense\presentation\controllers\budget_controller.dart:217:31 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable '_categoryExpenses' isn't used - lib\features\expense\presentation\controllers\budget_controller.dart:217:31 - unused_local_variable
+warning - The value of the local variable 'expenseController' isn't used - lib\features\expense\presentation\controllers\budget_controller.dart:269:29 - unused_local_variable
+   info - The local variable '_expenseToDelete' starts with an underscore - lib\features\expense\presentation\controllers\expense_controller.dart:226:27 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable '_expenseToDelete' isn't used - lib\features\expense\presentation\controllers\expense_controller.dart:226:27 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\expense\presentation\pages\reports_page.dart:306:56 - deprecated_member_use
+   info - The local variable '_deletedGoal' starts with an underscore - lib\features\goals\presentation\controllers\goal_controller.dart:121:27 - no_leading_underscores_for_local_identifiers
+warning - The value of the local variable '_deletedGoal' isn't used - lib\features\goals\presentation\controllers\goal_controller.dart:121:27 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\add_edit_goal_page.dart:467:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goal_details_page.dart:287:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goal_details_page.dart:658:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goal_stats_page.dart:201:26 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goal_stats_page.dart:579:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goals_list_page.dart:199:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goals_list_page.dart:213:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\goals\presentation\pages\goals_list_page.dart:319:44 - deprecated_member_use
+warning - The value of the field '_tag' isn't used - lib\features\search\presentation\controllers\expense_search_controller.dart:11:23 - unused_field
+
