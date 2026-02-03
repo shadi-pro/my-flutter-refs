@@ -9,7 +9,7 @@
 ¦   +---constants
 ¦   ¦       app_colors.dart
 ¦   ¦       app_texts.dart
-¦   ¦       
+¦   ¦
 ¦   +---errors
 ¦   +---localization
 ¦   ¦       app_translations.dart
@@ -17,13 +17,13 @@
 ¦   +---models
 ¦   ¦       enums.dart
 ¦   ¦       goal_entity.dart
-¦   ¦
+¦   ¦       
 ¦   +---network
 ¦   +---security
 ¦   ¦       secure_storage_production.dart
 ¦   ¦       security_check.dart
 ¦   ¦       simple_encryption.dart
-¦   ¦       
+¦   ¦
 ¦   +---usecases
 ¦   +---utils
 ¦           data_migrator.dart
@@ -84,7 +84,7 @@
     ¦   +---presentation
     ¦       +---controllers
     ¦       ¦       goal_controller.dart
-    ¦       ¦
+    ¦       ¦       
     ¦       +---pages
     ¦       ¦       add_edit_goal_page.dart
     ¦       ¦       goals_list_page.dart
