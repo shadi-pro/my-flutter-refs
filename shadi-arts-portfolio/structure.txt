@@ -1,0 +1,74 @@
+Project Analysis:
+Frontend: React with multiple components (About, Gallery, OrderForm, etc.)
+
+Backend: Express.js with MVC architecture
+
+Database: MongoDB (based on your models)
+
+Cloudinary: For image uploads (as mentioned in uploadMiddleware)
+
+Proxy setup: For connecting frontend/backend during development
+
+
+-----------------------------------------------------
+
+
+Shadi-Arts-Website/
+│
+├── client/          # React Frontend
+│   ├── public/
+│   |   ├──  assets/
+|   │       ├── shadi-log.jpeg 
+|   │       ├── shadi-profile.jpeg 
+|   │       ├── youtube-banner.jpeg 
+│   |       ├── index.html
+│   └── src/
+│       ├── components/
+│       │   ├── About.jsx
+│       │   ├── About.css
+│       │   ├── Navbar.jsx
+│       │   ├── Navbar.jsx
+│       │   ├── Gallery.jsx  (image model )
+│       │   ├── Gallery.css  
+│       │   ├── Hero.jsx
+│       │   ├── Hero.css
+│       │   ├── OrderForm.jsx (full cycle of ordering)
+│       │   ├── OrderForm.css
+│       │   ├── Footer.jsx (later)
+│       │   └── AdminPanel.jsx (later)
+│       ├── App.js
+│       ├── App.css
+│       ├── index.js
+│       ├── index.css
+│       ├── setupProxy.js
+│       └── index.js
+│   ├── package.json
+│   ├── package-lock.json
+│   └── .gitignore
+│   └── README.md
+│   └── node_modules/
+│
+├── server/          # Node.js + Express Backend + cloufinart 
+│   ├── controllers/
+│   │   ├── orderController.js
+│   │   └── galleryController.js
+│   ├── models/
+│   │   ├── Order.js
+│   │   └── Artwork.js
+│   ├── routes/
+│   │   ├── orderRoutes.js
+│   │   └── galleryRoutes.js
+│   ├── middleware/
+│   │   └── uploadMiddleware.js 
+│   ├── .env
+|   └── package.json
+|   └── package-lock.json
+│   └── server.js
+│   └── test-order.js
+│   └── test-cloudinary.js
+│   └── debug-validation.js
+│
+└── package.json
+└── package-lock.json
+└── .gitignore
+└── structure.txt
